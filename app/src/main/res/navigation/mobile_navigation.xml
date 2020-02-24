@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/nav_news">
+
+    <fragment
+        android:id="@+id/nav_news"
+        android:name="com.wsiz.wd_mobile.ui.News.NewsFragment"
+        android:label="@string/menu_news"
+        tools:layout="@layout/fragment_news" >
+        <action
+            android:id="@+id/action_nav_news_to_nav_grade"
+            app:destination="@id/nav_grade" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/nav_grade"
+        android:name="com.wsiz.wd_mobile.ui.Grade.GradeFragment"
+        android:label="@string/menu_grade"
+        tools:layout="@layout/fragment_grade" >
+        <action
+            android:id="@+id/action_nav_grade_to_nav_finances"
+            app:destination="@id/nav_finances" />
+        <action
+            android:id="@+id/action_nav_grade_to_nav_news"
+            app:destination="@id/nav_news" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/nav_finances"
+        android:name="com.wsiz.wd_mobile.ui.Finances.FinancesFragment"
+        android:label="@string/menu_finances"
+        tools:layout="@layout/fragment_finances" >
+        <action
+            android:id="@+id/action_nav_finances_to_nav_grade"
+            app:destination="@id/nav_grade" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/nav_lesson"
+        android:name="com.wsiz.wd_mobile.ui.Lesson.LessonFragment"
+        android:label="@string/menu_lesson"
+        tools:layout="@layout/fragment_lesson" />
+
+    <fragment
+        android:id="@+id/nav_personnel"
+        android:name="com.wsiz.wd_mobile.ui.Personnel.PersonnelFragment"
+        android:label="@string/menu_personnel"
+        tools:layout="@layout/fragment_personnel" />
+
+    <fragment
+        android:id="@+id/nav_info"
+        android:name="com.wsiz.wd_mobile.ui.Info.InfoFragment"
+        android:label="@string/menu_info"
+        tools:layout="@layout/fragment_info" />
+</navigation>

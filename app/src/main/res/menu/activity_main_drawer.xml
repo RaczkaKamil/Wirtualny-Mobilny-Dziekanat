@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_news"
+            android:icon="@drawable/ic_fiber_new_black_24dp"
+            android:title="@string/menu_news" />
+        <item
+            android:id="@+id/nav_grade"
+            android:icon="@drawable/ic_assignment_black_24dp"
+            android:title="@string/menu_grade" />
+        <item
+            android:id="@+id/nav_finances"
+            android:icon="@drawable/ic_account_balance_wallet_black_24dp"
+            android:title="@string/menu_finances" />
+        <item
+            android:id="@+id/nav_lesson"
+            android:icon="@drawable/ic_event_black_24dp"
+            android:title="@string/menu_lesson" />
+    </group>
+
+    <item android:title="Communicate">
+        <menu>
+            <item
+                android:id="@+id/nav_personnel"
+                android:icon="@drawable/ic_contact_mail_black_24dp"
+                android:title="@string/menu_personnel" />
+            <item
+                android:id="@+id/nav_info"
+                android:icon="@drawable/ic_info_black_24dp"
+                android:title="@string/menu_info" />
+        </menu>
+    </item>
+
+    <item android:title="">
+        <menu>
+            <item
+                android:id="@+id/nav_logOut"
+                android:icon="@drawable/ic_exit_to_app_black_24dp"
+                android:title="@string/menu_log_out"
+                />
+        </menu>
+    </item>
+
+</menu>
