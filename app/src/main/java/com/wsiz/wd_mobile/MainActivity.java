@@ -1,20 +1,20 @@
 package com.wsiz.wd_mobile;
 
+import android.app.AlarmManager;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Intent;
 import android.os.Bundle;
-
-import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
-
+import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
+import android.widget.Toast;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBar;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.NotificationCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -23,67 +23,53 @@ import androidx.navigation.ui.NavigationUI;
 import com.google.android.material.navigation.NavigationView;
 import com.wsiz.wd_mobile.Pocket.LocalConnectionWriter;
 import com.wsiz.wd_mobile.Pocket.LocalFileReader;
-import com.wsiz.wd_mobile.ui.Finances.FinancesFragment;
-import com.wsiz.wd_mobile.ui.Grade.GradeFragment;
-import com.wsiz.wd_mobile.ui.News.NewsFragment;
 
-import androidx.drawerlayout.widget.DrawerLayout;
+import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.ProtocolException;
+import java.net.URL;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-
-import android.view.Menu;
+import static androidx.constraintlayout.widget.Constraints.TAG;
 
 public class MainActivity extends AppCompatActivity {
 
-    private AppBarConfiguration mAppBarConfiguration;
-    private String TOKEN;
-    private String STUDENT_ID;
-    private String FINANCES_ID;
-
     LocalConnectionWriter localConnectionWriter = new LocalConnectionWriter(this);
     Toolbar toolbar;
+    private AppBarConfiguration mAppBarConfiguration;
+
+    String TOKEN;
+    String STUDENT_ID;
+    String FINANCES_ID;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         getWindow().setStatusBarColor(getResources().getColor(R.color.colorPrimaryDark, this.getTheme()));
         getWindow().setNavigationBarColor(getResources().getColor(R.color.colordarkgrey, this.getTheme()));
-
         LocalFileReader tokenPocket = new LocalFileReader();
         tokenPocket.startReadToken(this);
         tokenPocket.startReadUserID();
-        this.TOKEN = tokenPocket.getToken();
-        this.STUDENT_ID = String.valueOf(tokenPocket.getStudentid());
-        this.FINANCES_ID = String.valueOf(tokenPocket.getFinid());
+        TOKEN = tokenPocket.getToken();
+        STUDENT_ID = String.valueOf(tokenPocket.getStudentid());
+        FINANCES_ID = String.valueOf(tokenPocket.getFinid());
 
-
-        localConnectionWriter.LocalNews(this.TOKEN);
-        localConnectionWriter.LocalGrade(this.STUDENT_ID);
-        localConnectionWriter.LocalFinances(this.FINANCES_ID);
-        localConnectionWriter.LocalLectures(this.STUDENT_ID);
+        localConnectionWriter.LocalNews(TOKEN);
+        localConnectionWriter.LocalGrade(STUDENT_ID);
+        localConnectionWriter.LocalFinances(FINANCES_ID);
+        localConnectionWriter.LocalLectures(STUDENT_ID);
 
         System.out.println("______________ZALOGOWANO________________");
 
-        FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                Intent mySuperIntent = new Intent(MainActivity.this, LoginActivity.class);
-                startActivity(mySuperIntent);
-                finish();
-
-
-            }
-        });
-        fab.setVisibility(View.GONE);
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);
-
         mAppBarConfiguration = new AppBarConfiguration.Builder(
                 R.id.nav_news, R.id.nav_grade, R.id.nav_finances,
                 R.id.nav_lesson, R.id.nav_personnel, R.id.nav_info)
@@ -92,17 +78,23 @@ public class MainActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
+        startMyService();
+
+    }
+
+    private void refresh(){
+        Intent mySuperIntent = new Intent(this, MainActivity.class);
+        startActivity(mySuperIntent);
+        Toast.makeText(this,"Odświeżono połączenie",Toast.LENGTH_SHORT).show();
     }
 
 
-
-    public boolean isSaved(){
+    public boolean isSaved() {
         return localConnectionWriter.isAllComplete();
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
@@ -116,20 +108,23 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle item selection
-        switch (item.getItemId()) {
-            case R.id.action_reload:
-                Intent mySuperIntent = new Intent(MainActivity.this, LoginActivity.class);
-                startActivity(mySuperIntent);
-                finish();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
+        if (item.getItemId() == R.id.action_reload) {
+           refresh();
+            return true;
         }
+        return super.onOptionsItemSelected(item);
     }
 
-    public void setActionBarTitle(String title){
+    public void setActionBarTitle(String title) {
         toolbar.setTitle(title);
+    }
+
+    private void startMyService() {
+        System.out.println("ZACZETO SERWIS");
+        //Intent serviceIntent = new Intent(this, NotificationService.class);
+       // startService(serviceIntent);
+
+
     }
 
 }

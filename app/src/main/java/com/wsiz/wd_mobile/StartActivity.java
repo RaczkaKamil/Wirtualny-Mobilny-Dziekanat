@@ -39,28 +39,25 @@ public class StartActivity extends AppCompatActivity {
                 | View.SYSTEM_UI_FLAG_FULLSCREEN
                 | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION;
         getWindow().getDecorView()
-        .setSystemUiVisibility(mUIFlag);
+                .setSystemUiVisibility(mUIFlag);
 
     }
 
-    private void handDelay(){
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
+    private void handDelay() {
+        new Handler().postDelayed(() -> {
 
-                    Intent mySuperIntent = new Intent(StartActivity.this, LoginActivity.class);
-                    startActivity(mySuperIntent);
-                    finish();
+            Intent mySuperIntent = new Intent(StartActivity.this, LoginActivity.class);
+            startActivity(mySuperIntent);
+            finish();
 
-            }
         }, SPLASH_TIME);
     }
+
     private void playProgress() {
         ObjectAnimator.ofInt(splashProgress, "progress", 100)
                 .setDuration(2000)
                 .start();
     }
-
 
 
 }

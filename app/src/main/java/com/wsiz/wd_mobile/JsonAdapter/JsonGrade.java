@@ -8,6 +8,7 @@ public class JsonGrade {
     long wykladowcaid;
     int terminid;
     int ocenatypid;
+    String datamodyfikacji;
 
     public JsonGrade(long ocenaid, long semestrid, int studentid, long przedmiotid, long wykladowcaid, int terminid, int ocenatypid, String datamodyfikacji) {
         this.ocenaid = ocenaid;
@@ -51,6 +52,4 @@ public class JsonGrade {
     public String getDatamodyfikacji() {
         return datamodyfikacji;
     }
-
-    String datamodyfikacji;
 }

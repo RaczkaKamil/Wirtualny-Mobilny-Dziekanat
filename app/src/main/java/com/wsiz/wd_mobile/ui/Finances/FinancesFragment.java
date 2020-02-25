@@ -5,17 +5,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
-import android.widget.TextView;
 
-import androidx.annotation.Nullable;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProviders;
 
 import com.google.gson.Gson;
 import com.wsiz.wd_mobile.JsonAdapter.JsonFinances;
-import com.wsiz.wd_mobile.JsonAdapter.JsonNews;
 import com.wsiz.wd_mobile.ListAdapter.FinancesListAdapter;
 import com.wsiz.wd_mobile.MainActivity;
 import com.wsiz.wd_mobile.R;
@@ -31,6 +26,7 @@ public class FinancesFragment extends Fragment {
     ArrayList<String> MessageslistOfString = new ArrayList<String>();
     FinancesListAdapter customAdapterr;
     JsonFinances[] jsonFinances;
+    Boolean isFinansesLoaded = false;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -46,38 +42,23 @@ public class FinancesFragment extends Fragment {
         return root;
     }
 
-    private void getFinances(){
+    private void getFinances() {
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
                     MainActivity activity = (MainActivity) getActivity();
                     while (!activity.isSaved()) {
-
-                    }
-
-                    if (activity.isSaved()) {
-                        String data;
-                        FileInputStream fileInputStream = null;
-                        fileInputStream = Objects.requireNonNull(getContext()).openFileInput(getContext().fileList()    [getFinancesFileNumber()]);
-                        InputStreamReader inputStreamReader = new InputStreamReader(fileInputStream);
-                        BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-                        StringBuffer stringBuffer = new StringBuffer();
-
-
-                        while ((data = bufferedReader.readLine()) != null) {
-                            stringBuffer.append(data + "\n");
-                            String splited = stringBuffer.toString();
-                            System.out.println("----------------------------------ODCZYTANO FINANCES------------------------");
-                            System.out.println(splited);
-                            Gson gson = new Gson();
-                            jsonFinances = gson.fromJson(splited, JsonFinances[].class);
-                            setJson(jsonFinances);
+                        if (!isFinansesLoaded) {
+                            getAvailableFinances("ODCZYTANO STARE FINANSE");
+                            isFinansesLoaded = true;
                         }
+
                     }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } catch (NullPointerException e) {
+
+                    getAvailableFinances("ODCZYTANO NOWE FINANSE");
+
+                } catch (IOException | NullPointerException e) {
                     e.printStackTrace();
                 }
             }
@@ -86,24 +67,44 @@ public class FinancesFragment extends Fragment {
         thread.start();
     }
 
-    private int getFinancesFileNumber(){
+    private void getAvailableFinances(String message) throws IOException {
+        String data;
+        FileInputStream fileInputStream = null;
+        fileInputStream = Objects.requireNonNull(getContext()).openFileInput(getContext().fileList()[getFinancesFileNumber()]);
+        InputStreamReader inputStreamReader = new InputStreamReader(fileInputStream);
+        BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+        StringBuffer stringBuffer = new StringBuffer();
+
+
+        while ((data = bufferedReader.readLine()) != null) {
+            stringBuffer.append(data + "\n");
+            String splited = stringBuffer.toString();
+            System.out.println("----------------------------------" + message + "------------------------");
+            System.out.println(splited);
+            Gson gson = new Gson();
+            jsonFinances = gson.fromJson(splited, JsonFinances[].class);
+            setJson(jsonFinances);
+        }
+    }
+
+    private int getFinancesFileNumber() {
         for (int i = 0; i < Objects.requireNonNull(getContext()).fileList().length; i++) {
-            if(getContext().fileList()[i].contains("Finances")){
+            if (getContext().fileList()[i].contains("Finances")) {
                 return i;
             }
         }
         return -1;
     }
 
-    public void setJson(JsonFinances[] jsonFinances){
+    public void setJson(JsonFinances[] jsonFinances) {
         getActivity().runOnUiThread(new Runnable() {
             public void run() {
                 for (int i = 0; i < jsonFinances.length; i++) {
                     MessageslistOfString.add(
-                            jsonFinances[i].getDate()+"~~"+
-                                    jsonFinances[i].getType()+"~~"+
-                                    jsonFinances[i].getDetails()+"~~"+
-                                    jsonFinances[i].getAmount()+" zł"+"~~");
+                            jsonFinances[i].getDate() + "~~" +
+                                    jsonFinances[i].getType() + "~~" +
+                                    jsonFinances[i].getDetails() + "~~" +
+                                    jsonFinances[i].getAmount() + " zł" + "~~");
                     customAdapterr.notifyDataSetChanged();
                 }
 

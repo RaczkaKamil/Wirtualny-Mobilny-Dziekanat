@@ -48,11 +48,32 @@
         android:id="@+id/nav_personnel"
         android:name="com.wsiz.wd_mobile.ui.Personnel.PersonnelFragment"
         android:label="@string/menu_personnel"
-        tools:layout="@layout/fragment_personnel" />
+        tools:layout="@layout/fragment_personnel" >
+</fragment>
+
+    <fragment
+        android:id="@+id/nav_logOut"
+        android:name="com.wsiz.wd_mobile.ui.LogOut.LogOutFragment"
+        android:label="@string/menu_log_out"
+        tools:layout="@layout/log_out_fragment" />
+
+    <fragment
+        android:id="@+id/log"
+        android:name="com.wsiz.wd_mobile.ui.News.NewsFragment"
+        android:label="@string/menu_news"
+        tools:layout="@layout/fragment_news" >
+        <action
+            android:id="@+id/action_nav_news_to_nav_grade"
+            app:destination="@id/nav_grade" />
+    </fragment>
 
     <fragment
         android:id="@+id/nav_info"
         android:name="com.wsiz.wd_mobile.ui.Info.InfoFragment"
         android:label="@string/menu_info"
-        tools:layout="@layout/fragment_info" />
+        tools:layout="@layout/fragment_info" >
+        <action
+            android:id="@+id/action_nav_news_to_nav_grade"
+            app:destination="@id/nav_grade" />
+    </fragment>
 </navigation>

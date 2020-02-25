@@ -15,31 +15,30 @@ public class LocalFileReader {
     private int finID;
 
 
-    public void startReadToken(Context context){
+    public void startReadToken(Context context) {
         ctx = context;
         TokenReader();
     }
 
-    public void startReadUserID(){
+    public void startReadUserID() {
         UserIDReader();
     }
 
 
-    private void UserIDReader(){
-        if(getUserFileID()<ctx.fileList().length){
+    private void UserIDReader() {
+        if (getUserFileID() < ctx.fileList().length) {
             try {
-                FileInputStream fileInputStream = null;
+                FileInputStream fileInputStream;
                 fileInputStream = ctx.openFileInput(ctx.fileList()[getUserFileID()]);
                 InputStreamReader inputStreamReader = new InputStreamReader(fileInputStream);
                 BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-                StringBuffer stringBuffer = new StringBuffer();
-
+                StringBuilder stringBuffer = new StringBuilder();
 
                 while ((data = bufferedReader.readLine()) != null) {
-                    stringBuffer.append(data + "\n");
+                    stringBuffer.append(data).append("\n");
                     String splited = stringBuffer.toString();
-                    String splited2[] = splited.split("/");
-                    this.studentID =Integer.valueOf(splited2[0]);
+                    String[] splited2 = splited.split("/");
+                    this.studentID = Integer.valueOf(splited2[0]);
                     this.finID = Integer.valueOf(splited2[7]);
                 }
             } catch (IOException e) {
@@ -48,10 +47,10 @@ public class LocalFileReader {
         }
     }
 
-    private int getUserFileID(){
-        int userFileNumber = ctx.fileList().length+1;
+    private int getUserFileID() {
+        int userFileNumber = ctx.fileList().length + 1;
         for (int i = 0; i < ctx.fileList().length; i++) {
-            if(ctx.fileList()[i].contains("AccountInfo")){
+            if (ctx.fileList()[i].contains("AccountInfo")) {
                 userFileNumber = i;
                 return userFileNumber;
             }
@@ -61,22 +60,20 @@ public class LocalFileReader {
     }
 
 
-    private void TokenReader(){
-        if(getTokenFileID()<ctx.fileList().length){
+    private void TokenReader() {
+        if (getTokenFileID() < ctx.fileList().length) {
             try {
-                FileInputStream fileInputStream = null;
+                FileInputStream fileInputStream;
                 fileInputStream = ctx.openFileInput(ctx.fileList()[getTokenFileID()]);
                 InputStreamReader inputStreamReader = new InputStreamReader(fileInputStream);
                 BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-                StringBuffer stringBuffer = new StringBuffer();
+                StringBuilder stringBuffer = new StringBuilder();
 
 
                 while ((data = bufferedReader.readLine()) != null) {
-                    stringBuffer.append(data + "\n");
-                    String splited = stringBuffer.toString();
-                    this.token = splited;
+                    stringBuffer.append(data).append("\n");
+                    this.token = stringBuffer.toString();
                 }
-
 
 
             } catch (IOException e) {
@@ -88,10 +85,10 @@ public class LocalFileReader {
 
     }
 
-    private int getTokenFileID(){
-        int tokenFileNumber = ctx.fileList().length+1;
+    private int getTokenFileID() {
+        int tokenFileNumber = ctx.fileList().length + 1;
         for (int i = 0; i < ctx.fileList().length; i++) {
-            if(ctx.fileList()[i].contains("Token")){
+            if (ctx.fileList()[i].contains("Token")) {
                 tokenFileNumber = i;
                 return tokenFileNumber;
             }
@@ -100,15 +97,15 @@ public class LocalFileReader {
     }
 
 
-    public int getStudentid(){
+    public int getStudentid() {
         return this.studentID;
     }
 
-    public int getFinid(){
+    public int getFinid() {
         return this.finID;
     }
 
-    public String getToken(){
+    public String getToken() {
         return token;
     }
 }

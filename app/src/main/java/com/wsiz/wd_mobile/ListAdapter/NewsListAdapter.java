@@ -8,7 +8,6 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-
 import com.wsiz.wd_mobile.R;
 
 import java.text.SimpleDateFormat;
@@ -18,23 +17,15 @@ import java.util.Date;
 
 public class NewsListAdapter extends ArrayAdapter<String> {
 
-    private ArrayList<String> dataSet;
     Context mContext;
+    private ArrayList<String> dataSet;
+    private int lastPosition = -1;
 
     public NewsListAdapter(ArrayList<String>
-          data, Context context) {
+                                   data, Context context) {
         super(context, R.layout.list_news, data);
         this.dataSet = data;
         this.mContext = context;
-    }
-
-    private int lastPosition = -1;
-
-    private class ViewHolder {
-        TextView tiltedOnList;
-        TextView dataOnList;
-        TextView standardOnList;
-        ImageView imageonList;
     }
 
     @Override
@@ -51,19 +42,18 @@ public class NewsListAdapter extends ArrayAdapter<String> {
             viewHolder = new ViewHolder();
             LayoutInflater inflater = LayoutInflater.from(getContext());
             convertView = inflater.inflate(R.layout.list_news, parent, false);
-            viewHolder.tiltedOnList = (TextView) convertView.findViewById(R.id.tiltedOnList);
-            viewHolder.dataOnList = (TextView) convertView.findViewById(R.id.dataOnList);
-            result=convertView;
+            viewHolder.tiltedOnList = convertView.findViewById(R.id.tiltedOnList);
+            viewHolder.dataOnList = convertView.findViewById(R.id.dataOnList);
+            result = convertView;
 
             convertView.setTag(viewHolder);
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
-            result=convertView;
+            result = convertView;
         }
 
 
-
-        try{
+        try {
             String[] split = dataModel.split("~~");
             viewHolder.tiltedOnList.setText(split[0]);
             Date date;
@@ -72,13 +62,19 @@ public class NewsListAdapter extends ArrayAdapter<String> {
             SimpleDateFormat format1 = new SimpleDateFormat("dd.MM.yyyy");
             String date1 = format1.format(date);
             viewHolder.dataOnList.setText(date1);
-        }catch (ArrayIndexOutOfBoundsException e){
+        } catch (ArrayIndexOutOfBoundsException e) {
             e.fillInStackTrace();
         }
 
         return convertView;
     }
 
+    private class ViewHolder {
+        TextView tiltedOnList;
+        TextView dataOnList;
+        TextView standardOnList;
+        ImageView imageonList;
+    }
 
 
 }

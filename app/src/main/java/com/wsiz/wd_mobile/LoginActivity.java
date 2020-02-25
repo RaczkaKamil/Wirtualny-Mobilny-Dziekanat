@@ -1,20 +1,19 @@
 package com.wsiz.wd_mobile;
 
-import androidx.appcompat.app.AppCompatActivity;
-
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
-import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.Gson;
 import com.wsiz.wd_mobile.JsonAdapter.JsonUserID;
 
@@ -31,14 +30,43 @@ import java.security.NoSuchAlgorithmException;
 import javax.net.ssl.HttpsURLConnection;
 
 public class LoginActivity extends AppCompatActivity {
-    boolean isAutoLogin =true;
-    String autoLogin ="";
+    String autoLogin = "";
     TextView tf_login;
     TextView tf_password;
     TextView tf_info;
     Button bt_login;
-    ProgressBar progressBar;
+    Button btn_offline;
     JsonUserID jsonUserID;
+
+    Snackbar bar;
+
+    private boolean isAccoutSave = false;
+    private boolean isTokenSave = false;
+    private boolean isUserSave = false;
+
+    public static String md5(final String s) {
+        final String MD5 = "MD5";
+        try {
+            MessageDigest digest = java.security.MessageDigest
+                    .getInstance(MD5);
+            digest.update(s.getBytes());
+            byte[] messageDigest = digest.digest();
+
+
+            StringBuilder hexString = new StringBuilder();
+            for (byte aMessageDigest : messageDigest) {
+                StringBuilder h = new StringBuilder(Integer.toHexString(0xFF & aMessageDigest));
+                while (h.length() < 2)
+                    h.insert(0, "0");
+                hexString.append(h);
+            }
+            return hexString.toString();
+
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+        return "";
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,39 +76,60 @@ public class LoginActivity extends AppCompatActivity {
         getWindow().setStatusBarColor(getResources().getColor(R.color.colorPrimaryDark, this.getTheme()));
         getWindow().setNavigationBarColor(getResources().getColor(R.color.colordarkgrey, this.getTheme()));
 
+        bar = Snackbar.make(findViewById(android.R.id.content), "Łączenie...", Snackbar.LENGTH_INDEFINITE);
+        Snackbar.SnackbarLayout snack_view = (Snackbar.SnackbarLayout) bar.getView();
+        snack_view.addView(new ProgressBar(this));
+
+
         tf_login = findViewById(R.id.tf_login);
         tf_password = findViewById(R.id.tf_password);
-        progressBar = findViewById(R.id.progressBar);
-        progressBar.setVisibility(View.GONE);
         tf_info = findViewById(R.id.tf_info);
-        tf_info.setAlpha(0f);
         bt_login = findViewById(R.id.bt_login);
-        bt_login.setOnClickListener(view -> {
+        btn_offline = findViewById(R.id.btn_offline);
+        tf_info.setAlpha(0f);
+
+        if (isAutoLoginEnable()) {
+            SearchAndSetAccount();
             login();
-            progressBar.setVisibility(View.VISIBLE);
-        });
-        autoLogin();
+        } else {
+            SearchAndSetAccount();
+        }
+
+        bt_login.setOnClickListener(view -> login());
+        btn_offline.setOnClickListener(view -> loginOffLine());
     }
 
-    private void autoLogin(){
+    private boolean isAutoLoginEnable() {
+        try {
+            Intent intent = getIntent();
+            autoLogin = intent.getStringExtra("AutoLogin");
+            assert autoLogin != null;
+            if (autoLogin.contains("false")) {
+                System.out.println("ZABLOKOWANO LOGOWANIE!");
+                return false;
+            }
+        } catch (NullPointerException e) {
+            e.fillInStackTrace();
+        }
+        return true;
+    }
+
+    private void SearchAndSetAccount() {
         String data;
         for (int i = 0; i < fileList().length; i++) {
-            if(this.fileList()[i].contains("AccountLogin")){
+            if (this.fileList()[i].contains("AccountLogin")) {
                 try {
-                    FileInputStream fileInputStream = null;
+                    FileInputStream fileInputStream;
                     fileInputStream = this.openFileInput(this.fileList()[i]);
                     InputStreamReader inputStreamReader = new InputStreamReader(fileInputStream);
                     BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-                    StringBuffer stringBuffer = new StringBuffer();
-
-
+                    StringBuilder stringBuffer = new StringBuilder();
                     while ((data = bufferedReader.readLine()) != null) {
-                        stringBuffer.append(data + "\n");
+                        stringBuffer.append(data).append("\n");
                         String splited = stringBuffer.toString();
-                        String account[]=splited.split("/");
+                        String[] account = splited.split("/");
                         tf_login.setText(account[0]);
                         tf_password.setText(account[1].trim());
-                        bt_login.callOnClick();
                     }
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -90,221 +139,198 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
-    private void login(){
+    private void login() {
         String login = tf_login.getText().toString();
         String password = tf_password.getText().toString();
-        String encryptedPassword  = md5(password);
-        connectLogin(login,encryptedPassword ,password);
+        String encryptedPassword = md5(password);
+        connectLogin(login, encryptedPassword, password);
     }
 
-    public void connectLogin(String login, String md5password,String password) {
-        Thread thread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    URL url = new URL("https://dziekanat.wsi.edu.pl/get/wd-auth/auth?album=" +login + "&pass="+md5password);
-                    HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
-                    connection.setDoOutput(true);
-                    connection.setDoInput(true);
-                    InputStream stream = connection.getInputStream();
-                    BufferedReader reader = null;
-                    reader = new BufferedReader(new InputStreamReader(stream));
-                    StringBuffer buffer = new StringBuffer();
-                    String line = "";
-                    while ((line = reader.readLine()) != null) {
-                        buffer.append(line + "\n");
-                        Log.d("Response: ", "> " + line);
-                        if(line.length() == 36){
-                            saveToken(line);
-                            connectGetID(line);
-                            saveAccount(login, password);
-                            LastStepOfLogin(true,true);
-                        }else{
-                            LastStepOfLogin(false,true);
-                        }
+    public void connectLogin(String login, String md5password, String password) {
+        Thread thread = new Thread(() -> {
+            try {
+                changeSnackBarTExt("Logowanie...");
+                URL url = new URL("https://dziekanat.wsi.edu.pl/get/wd-auth/auth?album=" + login + "&pass=" + md5password);
+                HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
+                connection.setDoOutput(true);
+                connection.setDoInput(true);
+                InputStream stream = connection.getInputStream();
+                BufferedReader reader;
+                reader = new BufferedReader(new InputStreamReader(stream));
+                StringBuilder buffer = new StringBuilder();
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    buffer.append(line).append("\n");
+                    Log.d("Response: ", "> " + line);
+                    if (line.length() == 36) {
+                        changeSnackBarTExt("Zapisywanie...");
+                        saveToken(line);
+                        connectGetID(line);
+                        saveAccount(login, password);
+                        LastStepOfLogin(true, true);
+                    } else {
+                        LastStepOfLogin(false, true);
                     }
-
-                    connection.disconnect();
-                } catch (Exception e) {
-                    LastStepOfLogin(false,false);
-                    e.printStackTrace();
                 }
+
+                connection.disconnect();
+            } catch (Exception e) {
+                LastStepOfLogin(false, false);
+                e.printStackTrace();
             }
         });
         thread.start();
     }
 
-    private void LastStepOfLogin(boolean isSucces, boolean isConnect){
-        this.runOnUiThread(new Runnable() {
-            public void run() {
-                tf_info.setAlpha(0f);
-                if(isSucces && isConnect){
-                    tf_info.setText("Zalogowano!");
-                    tf_info.setTextColor(Color.GREEN);
-                    tf_info.animate().alpha(1f).setDuration(500);
-                    DelayLogin();
-                }else if(!isSucces&&isConnect) {
-                    progressBar.setVisibility(View.GONE);
-                    tf_info.setText("Błędny Login lub Hasło!");
-                    tf_info.setTextColor(Color.RED);
-                    tf_info.animate().alpha(1f).setDuration(500);
-                }else if(!isSucces&& !isConnect){
-                    progressBar.setVisibility(View.GONE);
-                    tf_info.setText("Błąd serwera!");
-                    tf_info.setTextColor(Color.RED);
-                    tf_info.animate().alpha(1f).setDuration(500);
-                }
+    @SuppressLint("SetTextI18n")
+    private void LastStepOfLogin(boolean isSucces, boolean isConnect) {
+        this.runOnUiThread(() -> {
+            tf_info.setAlpha(0f);
+            if (isSucces && isConnect) {
+                tf_info.setText("Zalogowano");
+                changeSnackBarTExt("Ładowanie...");
+                tf_info.setTextColor(Color.GREEN);
+                tf_info.animate().alpha(1f).setDuration(500);
+                DelayLogin();
+            } else if (!isSucces && isConnect) {
+                tf_info.setText("Błędny Login lub Hasło!");
+                tf_info.setTextColor(Color.RED);
+                tf_info.animate().alpha(1f).setDuration(500);
+            } else if (!isSucces) {
+                tf_info.setText("Błąd serwera!");
+                tf_info.setTextColor(Color.RED);
+                tf_info.animate().alpha(1f).setDuration(500);
             }
         });
     }
-    private void DelayLogin(){
-        int delay = 1000;
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
+
+    private void changeSnackBarTExt(String text) {
+        this.runOnUiThread(() -> bar.setText(text).show());
+
+    }
+
+    private void DelayLogin() {
+        int delay = 500;
+        new Handler().postDelayed(() -> {
+            if (isAccoutSave && isTokenSave && isUserSave) {
                 Intent mySuperIntent = new Intent(LoginActivity.this, MainActivity.class);
                 startActivity(mySuperIntent);
                 finish();
-
+            } else {
+                DelayLogin();
             }
-        },delay);
+
+
+        }, delay);
     }
 
-    private  void saveAccount(String login, String password){
-        this.runOnUiThread(new Runnable() {
-            public void run() {
-
-                try {
-                    FileOutputStream fileOutputStream = null;
-                    fileOutputStream = getApplicationContext().openFileOutput("AccountLogin", Context.MODE_PRIVATE);
-                    fileOutputStream.write(login.getBytes());
-                    fileOutputStream.write("/".getBytes());
-                    fileOutputStream.write(password.getBytes());
-                    fileOutputStream.close();
-                    System.out.println("-------------------ZAPISANO KONTO-----------------");
-                    System.out.println("KONTO: "+login+ " " + password);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-
+    private void loginOffLine() {
+        Intent mySuperIntent = new Intent(LoginActivity.this, MainActivity.class);
+        startActivity(mySuperIntent);
+        finish();
     }
-    private  void saveToken(String token){
-        this.runOnUiThread(new Runnable() {
-            public void run() {
-                try {
-                    FileOutputStream fileOutputStream = null;
-                    fileOutputStream = getApplicationContext().openFileOutput("Token", Context.MODE_PRIVATE);
-                    fileOutputStream.write(token.getBytes());
-                    fileOutputStream.close();
-                    System.out.println("-------------------ZAPISANO TOKEN-----------------");
-                    System.out.println("TOKEN: "+ token);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+
+    private void saveAccount(String login, String password) {
+        this.runOnUiThread(() -> {
+            try {
+                FileOutputStream fileOutputStream;
+                fileOutputStream = getApplicationContext().openFileOutput("AccountLogin", Context.MODE_PRIVATE);
+                fileOutputStream.write(login.getBytes());
+                fileOutputStream.write("/".getBytes());
+                fileOutputStream.write(password.getBytes());
+                fileOutputStream.close();
+                System.out.println("-------------------ZAPISANO KONTO-----------------");
+                System.out.println("KONTO: " + login + " " + password);
+                isAccoutSave = true;
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         });
 
     }
 
-    private  void saveUser(JsonUserID jsonUserID){
-        this.runOnUiThread(new Runnable() {
-            public void run() {
-                try {
-                    FileOutputStream fileOutputStream = null;
-                    fileOutputStream = getApplicationContext().openFileOutput("AccountInfo", Context.MODE_PRIVATE);
-                    fileOutputStream.write(String.valueOf(jsonUserID.getStudentid()).getBytes());
-                    fileOutputStream.write("/".getBytes());
-                    fileOutputStream.write(String.valueOf(jsonUserID.getAlbum()).getBytes());
-                    fileOutputStream.write("/".getBytes());
-                    fileOutputStream.write(String.valueOf(jsonUserID.getImie()).getBytes());
-                    fileOutputStream.write("/".getBytes());
-                    fileOutputStream.write(String.valueOf(jsonUserID.getNazwisko()).getBytes());
-                    fileOutputStream.write("/".getBytes());
-                    fileOutputStream.write(String.valueOf(jsonUserID.getDataRejestracji()).getBytes());
-                    fileOutputStream.write("/".getBytes());
-                    fileOutputStream.write(String.valueOf(jsonUserID.isActive()).getBytes());
-                    fileOutputStream.write("/".getBytes());
-                    fileOutputStream.write(String.valueOf(jsonUserID.isStar()).getBytes());
-                    fileOutputStream.write("/".getBytes());
-                    fileOutputStream.write(String.valueOf(jsonUserID.getFinid()).getBytes());
-                    fileOutputStream.write("/".getBytes());
-                    fileOutputStream.write(String.valueOf(jsonUserID.getEmail()).getBytes());
-                    fileOutputStream.write("/".getBytes());
-                    fileOutputStream.write(String.valueOf(jsonUserID.getPhone()).getBytes());
-                    fileOutputStream.write("/".getBytes());
-                    fileOutputStream.write(String.valueOf(jsonUserID.getComment()).getBytes());
-                    fileOutputStream.write("/".getBytes());
-                    fileOutputStream.close();
-                    System.out.println("-------------------ZAPISANO INFORMACJE USERA-----------------");
-                    System.out.println("USER INFO: " + jsonUserID.getAlbum()+", " + jsonUserID.getImie());
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+    private void saveToken(String token) {
+        this.runOnUiThread(() -> {
+            try {
+                FileOutputStream fileOutputStream;
+                fileOutputStream = getApplicationContext().openFileOutput("Token", Context.MODE_PRIVATE);
+                fileOutputStream.write(token.getBytes());
+                fileOutputStream.close();
+                System.out.println("-------------------ZAPISANO TOKEN-----------------");
+                System.out.println("TOKEN: " + token);
+                isTokenSave = true;
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         });
 
     }
 
+    private void saveUser(JsonUserID jsonUserID) {
+        this.runOnUiThread(() -> {
+            try {
+                FileOutputStream fileOutputStream;
+                fileOutputStream = getApplicationContext().openFileOutput("AccountInfo", Context.MODE_PRIVATE);
+                fileOutputStream.write(String.valueOf(jsonUserID.getStudentid()).getBytes());
+                fileOutputStream.write("/".getBytes());
+                fileOutputStream.write(String.valueOf(jsonUserID.getAlbum()).getBytes());
+                fileOutputStream.write("/".getBytes());
+                fileOutputStream.write(String.valueOf(jsonUserID.getImie()).getBytes());
+                fileOutputStream.write("/".getBytes());
+                fileOutputStream.write(String.valueOf(jsonUserID.getNazwisko()).getBytes());
+                fileOutputStream.write("/".getBytes());
+                fileOutputStream.write(String.valueOf(jsonUserID.getDataRejestracji()).getBytes());
+                fileOutputStream.write("/".getBytes());
+                fileOutputStream.write(String.valueOf(jsonUserID.isActive()).getBytes());
+                fileOutputStream.write("/".getBytes());
+                fileOutputStream.write(String.valueOf(jsonUserID.isStar()).getBytes());
+                fileOutputStream.write("/".getBytes());
+                fileOutputStream.write(String.valueOf(jsonUserID.getFinid()).getBytes());
+                fileOutputStream.write("/".getBytes());
+                fileOutputStream.write(String.valueOf(jsonUserID.getEmail()).getBytes());
+                fileOutputStream.write("/".getBytes());
+                fileOutputStream.write(String.valueOf(jsonUserID.getPhone()).getBytes());
+                fileOutputStream.write("/".getBytes());
+                fileOutputStream.write(String.valueOf(jsonUserID.getComment()).getBytes());
+                fileOutputStream.write("/".getBytes());
+                fileOutputStream.close();
+                System.out.println("-------------------ZAPISANO INFORMACJE USERA-----------------");
+                System.out.println("USER INFO: " + jsonUserID.getAlbum() + ", " + jsonUserID.getImie());
+                changeSnackBarTExt("Zapisano...");
+                isUserSave = true;
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+
+    }
 
     public void connectGetID(String token) {
-        Thread thread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    URL url = new URL("https://dziekanat.wsi.edu.pl/get/wd-auth/user?wdauth=" +token);
-                    HttpsURLConnection conn = (HttpsURLConnection) url.openConnection();
-                    conn.setDoOutput(true);
-                    conn.setDoInput(true);
-                    InputStream stream = conn.getInputStream();
-                    BufferedReader reader = null;
-                    reader = new BufferedReader(new InputStreamReader(stream));
-
-                    StringBuffer buffer = new StringBuffer();
-                    String line = "";
-
-                    while ((line = reader.readLine()) != null) {
-                        buffer.append(line + "\n");
-                        Log.d("Response: ", "> " + line);
-                        Gson gson = new Gson();
-                        jsonUserID = gson.fromJson(line, JsonUserID.class);
-                        saveUser(jsonUserID);
-                    }
-
-                    conn.disconnect();
-                } catch (Exception e) {
-                    LastStepOfLogin(false,true);
-                    e.printStackTrace();
-                }
-            }
-        });
-        thread.start();
-    }
-
-
-    public static final String md5(final String s) {
-        final String MD5 = "MD5";
+        changeSnackBarTExt("Pobieranie...");
         try {
-            // Create MD5 Hash
-            MessageDigest digest = java.security.MessageDigest
-                    .getInstance(MD5);
-            digest.update(s.getBytes());
-            byte messageDigest[] = digest.digest();
+            URL url = new URL("https://dziekanat.wsi.edu.pl/get/wd-auth/user?wdauth=" + token);
+            HttpsURLConnection conn = (HttpsURLConnection) url.openConnection();
+            conn.setDoOutput(true);
+            conn.setDoInput(true);
+            InputStream stream = conn.getInputStream();
+            BufferedReader reader;
+            reader = new BufferedReader(new InputStreamReader(stream));
 
-            // Create Hex String
-            StringBuilder hexString = new StringBuilder();
-            for (byte aMessageDigest : messageDigest) {
-                String h = Integer.toHexString(0xFF & aMessageDigest);
-                while (h.length() < 2)
-                    h = "0" + h;
-                hexString.append(h);
+            StringBuilder buffer = new StringBuilder();
+            String line;
+
+            while ((line = reader.readLine()) != null) {
+                buffer.append(line).append("\n");
+                Log.d("Response: ", "> " + line);
+                Gson gson = new Gson();
+                jsonUserID = gson.fromJson(line, JsonUserID.class);
+                saveUser(jsonUserID);
             }
-            return hexString.toString();
 
-        } catch (NoSuchAlgorithmException e) {
+            conn.disconnect();
+        } catch (Exception e) {
+            LastStepOfLogin(false, true);
             e.printStackTrace();
         }
-        return "";
     }
 }

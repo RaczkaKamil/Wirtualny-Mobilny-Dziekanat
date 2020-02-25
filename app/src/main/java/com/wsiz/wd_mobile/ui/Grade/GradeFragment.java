@@ -7,14 +7,12 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 
 import com.google.android.material.tabs.TabLayout;
 import com.google.gson.Gson;
-import com.wsiz.wd_mobile.JsonAdapter.JsonLectures;
-import com.wsiz.wd_mobile.JsonAdapter.JsonNews;
 import com.wsiz.wd_mobile.JsonAdapter.JsonGrade;
+import com.wsiz.wd_mobile.JsonAdapter.JsonLectures;
 import com.wsiz.wd_mobile.JsonAdapter.TranslatorOfGrades;
 import com.wsiz.wd_mobile.ListAdapter.GradesListAdapter;
 import com.wsiz.wd_mobile.MainActivity;
@@ -28,13 +26,16 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 public class GradeFragment extends Fragment {
-JsonGrade[] jsonGrades;
+    JsonGrade[] jsonGrades;
     JsonLectures[] jsonLectures;
-    ArrayList<String> semestrList =  new ArrayList<String>();
+    ArrayList<String> semestrList = new ArrayList<String>();
     ArrayList<String> MessageslistOfString = new ArrayList<String>();
     GradesListAdapter gradesListAdapter;
     TabLayout tabLayout;
-    boolean isLecturesDownloaded=false;
+    boolean isLecturesDownloaded = false;
+    boolean isGradeLoaded = false;
+    boolean isLecturesLoaded = false;
+
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_grade, container, false);
@@ -48,12 +49,12 @@ JsonGrade[] jsonGrades;
         online_list.setClickable(false);
         gradesListAdapter.notifyDataSetChanged();
 
-        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener(){
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
 
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
-                    selectedTab(tab.getPosition(),Long.valueOf(semestrList.get(tab.getPosition())));
-                }
+                selectedTab(tab.getPosition(), Long.valueOf(semestrList.get(tab.getPosition())));
+            }
 
             @Override
             public void onTabUnselected(TabLayout.Tab tab) {
@@ -69,61 +70,46 @@ JsonGrade[] jsonGrades;
         return root;
     }
 
-    public void selectedTab(int tab, long semestr){
+    public void selectedTab(int tab, long semestr) {
         int count = 0;
         TranslatorOfGrades translator = new TranslatorOfGrades(0);
         for (int i = 0; i < jsonGrades.length; i++) {
-            if(jsonGrades[i].getSemestrid()==semestr){
+            if (jsonGrades[i].getSemestrid() == semestr) {
                 translator.setNotesIn(jsonGrades[i].getOcenatypid());
                 count++;
             }
-            setJsonLectures(jsonLectures,semestr);
+            setJsonLectures(jsonLectures, semestr);
         }
     }
 
-    public void removeTab(int lastId,long lastSemestr){
+    public void removeTab(int lastId, long lastSemestr) {
         for (int i = 0; i < 6; i++) {
-            try{
+            try {
                 tabLayout.removeTab(tabLayout.getTabAt(lastId));
-            }catch (NullPointerException e){
+            } catch (NullPointerException e) {
                 e.fillInStackTrace();
             }
 
         }
-        tabLayout.getTabAt(lastId-1).select();
-        selectedTab(lastId-1,lastSemestr);
+        tabLayout.getTabAt(lastId - 1).select();
+        selectedTab(lastId - 1, lastSemestr);
     }
 
-    private void getGrade(){
+    private void getGrade() {
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
                     MainActivity activity = (MainActivity) getActivity();
                     while (!activity.isSaved()) {
-                    }
-                    if (activity.isSaved()) {
-                        String data;
-                        FileInputStream fileInputStream = null;
-                        fileInputStream = Objects.requireNonNull(getContext()).openFileInput(getContext().fileList()    [getGradeFileNumber()]);
-                        InputStreamReader inputStreamReader = new InputStreamReader(fileInputStream);
-                        BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-                        StringBuffer stringBuffer = new StringBuffer();
-
-
-                        while ((data = bufferedReader.readLine()) != null) {
-                            stringBuffer.append(data + "\n");
-                            String splited = stringBuffer.toString();
-                            System.out.println("----------------------------------ODCZYTANO OCENY------------------------");
-                            System.out.println(splited);
-                            Gson gson = new Gson();
-                            jsonGrades = gson.fromJson(splited, JsonGrade[].class);
-                            setJson(jsonGrades);
+                        if (!isGradeLoaded) {
+                            getAvailableGrade("ODCZYTANO STARE OCENY");
+                            isGradeLoaded = true;
                         }
+
                     }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } catch (NullPointerException e) {
+                    getAvailableGrade("ODCZYTANO NOWE OCENY");
+                } catch (IOException | NullPointerException e) {
                     e.printStackTrace();
                 }
             }
@@ -133,74 +119,95 @@ JsonGrade[] jsonGrades;
     }
 
 
-    private void getLectures(long semestr){
+    private void getLectures(long semestr) {
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
                     MainActivity activity = (MainActivity) getActivity();
                     while (!activity.isSaved()) {
-                    }
-                    if (activity.isSaved()) {
-                        String data;
-                        FileInputStream fileInputStream = null;
-                        fileInputStream = Objects.requireNonNull(getContext()).openFileInput(getContext().fileList()    [getLecturesFileNumber()]);
-                        InputStreamReader inputStreamReader = new InputStreamReader(fileInputStream);
-                        BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-                        StringBuffer stringBuffer = new StringBuffer();
-
-
-                        while ((data = bufferedReader.readLine()) != null) {
-                            stringBuffer.append(data + "\n");
-                            String splited = stringBuffer.toString();
-                            System.out.println("----------------------------------ODCZYTANO LECTURESY------------------------");
-                            System.out.println(splited);
-                            Gson gson = new Gson();
-                            jsonLectures = gson.fromJson(splited, JsonLectures[].class);
-                            isLecturesDownloaded=true;
-                            setJsonLectures(jsonLectures,semestr);
+                        if (!isLecturesLoaded) {
+                            getAvailableLectures("ODCZYTANO STARE OCENY2", semestr);
+                            isLecturesLoaded = true;
                         }
                     }
+                    getAvailableLectures("ODCZYTANO NOWE OCENY2", semestr);
                 } catch (IOException e) {
-                    e.printStackTrace();
-                } catch (NullPointerException e) {
                     e.printStackTrace();
                 }
             }
         });
-
         thread.start();
     }
 
+    private void getAvailableLectures(String message, long semestr) throws IOException {
+        String data;
+        FileInputStream fileInputStream = null;
+        fileInputStream = Objects.requireNonNull(getContext()).openFileInput(getContext().fileList()[getLecturesFileNumber()]);
+        InputStreamReader inputStreamReader = new InputStreamReader(fileInputStream);
+        BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+        StringBuffer stringBuffer = new StringBuffer();
+
+
+        while ((data = bufferedReader.readLine()) != null) {
+            stringBuffer.append(data + "\n");
+            String splited = stringBuffer.toString();
+            System.out.println("----------------------------------" + message + "------------------------");
+            System.out.println(splited);
+            Gson gson = new Gson();
+            jsonLectures = gson.fromJson(splited, JsonLectures[].class);
+            isLecturesDownloaded = true;
+            setJsonLectures(jsonLectures, semestr);
+        }
+    }
+
+
+    private void getAvailableGrade(String message) throws IOException {
+        String data;
+        FileInputStream fileInputStream = null;
+        fileInputStream = Objects.requireNonNull(getContext()).openFileInput(getContext().fileList()[getGradeFileNumber()]);
+        InputStreamReader inputStreamReader = new InputStreamReader(fileInputStream);
+        BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+        StringBuffer stringBuffer = new StringBuffer();
+
+
+        while ((data = bufferedReader.readLine()) != null) {
+            stringBuffer.append(data + "\n");
+            String splited = stringBuffer.toString();
+            System.out.println("----------------------------------" + message + "------------------------");
+            System.out.println(splited);
+            Gson gson = new Gson();
+            jsonGrades = gson.fromJson(splited, JsonGrade[].class);
+            setJson(jsonGrades);
+        }
+    }
 
     public void setJson(JsonGrade[] jsonGrades) {
         getActivity().runOnUiThread(new Runnable() {
             public void run() {
                 int count = 1;
-                long semestrid=0;
+                long semestrid = 0;
 
                 for (int i = 0; i < jsonGrades.length; i++) {
-                    if(semestrid==0){
-                        semestrid=jsonGrades[i].getSemestrid();
+                    if (semestrid == 0) {
+                        semestrid = jsonGrades[i].getSemestrid();
                         semestrList.add(String.valueOf(semestrid));
                     }
 
-                    if(semestrid!=jsonGrades[i].getSemestrid()){
-                        semestrid=jsonGrades[i].getSemestrid();
+                    if (semestrid != jsonGrades[i].getSemestrid()) {
+                        semestrid = jsonGrades[i].getSemestrid();
                         semestrList.add(String.valueOf(semestrid));
                         count++;
                     }
                 }
                 getLectures(semestrid);
-               removeTab(count,semestrid);
+                removeTab(count, semestrid);
             }
         });
     }
 
-    public void setJsonLectures(JsonLectures[] jsonLectures,long semestr) {
-        if(isLecturesDownloaded) {
-
-
+    public void setJsonLectures(JsonLectures[] jsonLectures, long semestr) {
+        if (isLecturesDownloaded) {
             getActivity().runOnUiThread(new Runnable() {
                 public void run() {
                     MessageslistOfString.clear();
@@ -237,18 +244,18 @@ JsonGrade[] jsonGrades;
 
     }
 
-    private int getGradeFileNumber(){
+    private int getGradeFileNumber() {
         for (int i = 0; i < Objects.requireNonNull(getContext()).fileList().length; i++) {
-            if(getContext().fileList()[i].contains("Grade")){
+            if (getContext().fileList()[i].contains("Grade")) {
                 return i;
             }
         }
         return -1;
     }
 
-    private int getLecturesFileNumber(){
+    private int getLecturesFileNumber() {
         for (int i = 0; i < Objects.requireNonNull(getContext()).fileList().length; i++) {
-            if(getContext().fileList()[i].contains("Lectures")){
+            if (getContext().fileList()[i].contains("Lectures")) {
                 return i;
             }
         }
