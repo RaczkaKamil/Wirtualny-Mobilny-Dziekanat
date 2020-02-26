@@ -10,8 +10,6 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.ProgressBar;
-import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
@@ -32,7 +30,6 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 public class NewsFragment extends Fragment {
-    private JsonNews[] jsonNews;
     private ArrayList<String> MessageslistOfString = new ArrayList<>();
     private ArrayList<String> MessageslistOfString2 = new ArrayList<>();
     private ArrayList<String> MessageslistOfString3 = new ArrayList<>();
@@ -73,7 +70,6 @@ public class NewsFragment extends Fragment {
         list_news.setAdapter(customAdapterr);
         list_news.setOnItemClickListener((adapterView, view, i, l) -> {
             int ll = (int) l;
-            Toast.makeText(getContext(), "Wybrano element: " + ll, Toast.LENGTH_SHORT).show();
             connectToChosedMessage(ll);
         });
 
@@ -139,7 +135,7 @@ public class NewsFragment extends Fragment {
             System.out.println("----------------------------------" + message + "------------------------");
             System.out.println(splited);
             Gson gson = new Gson();
-            jsonNews = gson.fromJson(splited, JsonNews[].class);
+            JsonNews[] jsonNews = gson.fromJson(splited, JsonNews[].class);
             setJson(jsonNews);
         }
 

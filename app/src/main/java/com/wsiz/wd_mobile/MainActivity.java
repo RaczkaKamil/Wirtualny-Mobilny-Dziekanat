@@ -1,19 +1,13 @@
 package com.wsiz.wd_mobile;
 
-import android.app.AlarmManager;
-import android.app.Notification;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.app.NotificationCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -23,18 +17,6 @@ import androidx.navigation.ui.NavigationUI;
 import com.google.android.material.navigation.NavigationView;
 import com.wsiz.wd_mobile.Pocket.LocalConnectionWriter;
 import com.wsiz.wd_mobile.Pocket.LocalFileReader;
-
-import java.io.BufferedReader;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.ProtocolException;
-import java.net.URL;
-
-import static androidx.constraintlayout.widget.Constraints.TAG;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -120,7 +102,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void startMyService() {
-        System.out.println("ZACZETO SERWIS");
         //Intent serviceIntent = new Intent(this, NotificationService.class);
        // startService(serviceIntent);
 

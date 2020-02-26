@@ -1,26 +1,16 @@
 package com.wsiz.wd_mobile.JsonAdapter;
 
 public class JsonFinances {
-    long txid;
-    String date;
-    String type;
-    String details;
-    long amount;
-    long sourceAccount;
-    long targetAccount;
+    private String date;
+    private String type;
+    private String details;
+    private  long amount;
 
-    public JsonFinances(long txid, String date, String type, String details, long amount, long sourceAccount, long targetAccount) {
-        this.txid = txid;
+    public JsonFinances(String date, String type, String details, long amount) {
         this.date = date;
         this.type = type;
         this.details = details;
         this.amount = amount;
-        this.sourceAccount = sourceAccount;
-        this.targetAccount = targetAccount;
-    }
-
-    public long getTxid() {
-        return txid;
     }
 
     public String getDate() {
@@ -39,11 +29,4 @@ public class JsonFinances {
         return amount;
     }
 
-    public long getSourceAccount() {
-        return sourceAccount;
-    }
-
-    public long getTargetAccount() {
-        return targetAccount;
-    }
 }

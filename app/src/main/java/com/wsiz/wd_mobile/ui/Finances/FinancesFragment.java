@@ -23,10 +23,9 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 public class FinancesFragment extends Fragment {
-    ArrayList<String> MessageslistOfString = new ArrayList<String>();
-    FinancesListAdapter customAdapterr;
-    JsonFinances[] jsonFinances;
-    Boolean isFinansesLoaded = false;
+    private ArrayList<String> MessageslistOfString = new ArrayList<>();
+    private FinancesListAdapter customAdapterr;
+    private Boolean isFinansesLoaded = false;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -43,24 +42,22 @@ public class FinancesFragment extends Fragment {
     }
 
     private void getFinances() {
-        Thread thread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    MainActivity activity = (MainActivity) getActivity();
-                    while (!activity.isSaved()) {
-                        if (!isFinansesLoaded) {
-                            getAvailableFinances("ODCZYTANO STARE FINANSE");
-                            isFinansesLoaded = true;
-                        }
-
+        Thread thread = new Thread(() -> {
+            try {
+                MainActivity activity = (MainActivity) getActivity();
+                assert activity != null;
+                while (!activity.isSaved()) {
+                    if (!isFinansesLoaded) {
+                        getAvailableFinances("ODCZYTANO STARE FINANSE");
+                        isFinansesLoaded = true;
                     }
 
-                    getAvailableFinances("ODCZYTANO NOWE FINANSE");
-
-                } catch (IOException | NullPointerException e) {
-                    e.printStackTrace();
                 }
+
+                getAvailableFinances("ODCZYTANO NOWE FINANSE");
+
+            } catch (IOException | NullPointerException e) {
+                e.printStackTrace();
             }
         });
 
@@ -69,20 +66,20 @@ public class FinancesFragment extends Fragment {
 
     private void getAvailableFinances(String message) throws IOException {
         String data;
-        FileInputStream fileInputStream = null;
+        FileInputStream fileInputStream;
         fileInputStream = Objects.requireNonNull(getContext()).openFileInput(getContext().fileList()[getFinancesFileNumber()]);
         InputStreamReader inputStreamReader = new InputStreamReader(fileInputStream);
         BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-        StringBuffer stringBuffer = new StringBuffer();
+        StringBuilder stringBuffer = new StringBuilder();
 
 
         while ((data = bufferedReader.readLine()) != null) {
-            stringBuffer.append(data + "\n");
+            stringBuffer.append(data).append("\n");
             String splited = stringBuffer.toString();
             System.out.println("----------------------------------" + message + "------------------------");
             System.out.println(splited);
             Gson gson = new Gson();
-            jsonFinances = gson.fromJson(splited, JsonFinances[].class);
+            JsonFinances[] jsonFinances = gson.fromJson(splited, JsonFinances[].class);
             setJson(jsonFinances);
         }
     }
@@ -96,19 +93,17 @@ public class FinancesFragment extends Fragment {
         return -1;
     }
 
-    public void setJson(JsonFinances[] jsonFinances) {
-        getActivity().runOnUiThread(new Runnable() {
-            public void run() {
-                for (int i = 0; i < jsonFinances.length; i++) {
-                    MessageslistOfString.add(
-                            jsonFinances[i].getDate() + "~~" +
-                                    jsonFinances[i].getType() + "~~" +
-                                    jsonFinances[i].getDetails() + "~~" +
-                                    jsonFinances[i].getAmount() + " zł" + "~~");
-                    customAdapterr.notifyDataSetChanged();
-                }
-
+    private void setJson(JsonFinances[] jsonFinances) {
+        Objects.requireNonNull(getActivity()).runOnUiThread(() -> {
+            for (JsonFinances jsonFinance : jsonFinances) {
+                MessageslistOfString.add(
+                        jsonFinance.getDate() + "~~" +
+                                jsonFinance.getType() + "~~" +
+                                jsonFinance.getDetails() + "~~" +
+                                jsonFinance.getAmount() + " zł" + "~~");
+                customAdapterr.notifyDataSetChanged();
             }
+
         });
     }
 }

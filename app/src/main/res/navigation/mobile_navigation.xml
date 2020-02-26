@@ -55,7 +55,7 @@
         android:id="@+id/nav_logOut"
         android:name="com.wsiz.wd_mobile.ui.LogOut.LogOutFragment"
         android:label="@string/menu_log_out"
-        tools:layout="@layout/log_out_fragment" />
+        tools:layout="@layout/fragment_logOut" />
 
     <fragment
         android:id="@+id/log"

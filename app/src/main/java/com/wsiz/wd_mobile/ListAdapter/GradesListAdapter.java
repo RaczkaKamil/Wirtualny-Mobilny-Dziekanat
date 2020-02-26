@@ -14,24 +14,14 @@ import java.util.ArrayList;
 
 public class GradesListAdapter extends ArrayAdapter<String> {
 
-    Context mContext;
-    private ArrayList<String> dataSet;
-    private int lastPosition = -1;
-
     public GradesListAdapter(ArrayList<String> data, Context context) {
         super(context, R.layout.list_grade, data);
-        this.dataSet = data;
-        this.mContext = context;
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        // Get the data item for this position
         String dataModel = getItem(position);
-        // Check if an existing view is being reused, otherwise inflate the view
-        ViewHolder viewHolder; // view lookup cache stored in tag
-
-        final View result;
+        ViewHolder viewHolder;
 
         if (convertView == null) {
 
@@ -44,16 +34,15 @@ public class GradesListAdapter extends ArrayAdapter<String> {
             viewHolder.t2 = convertView.findViewById(R.id.tf_t2);
             viewHolder.t3 = convertView.findViewById(R.id.tf_t3);
             viewHolder.aktywnosc = convertView.findViewById(R.id.tf_aktywnosc);
-            result = convertView;
-
             convertView.setTag(viewHolder);
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
-            result = convertView;
+
         }
 
 
         try {
+            assert dataModel != null;
             String[] split = dataModel.split("~~");
             viewHolder.przedmiot.setText(split[0]);
             if (!split[1].contains("0.0")) {

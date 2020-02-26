@@ -16,10 +16,6 @@ import com.wsiz.wd_mobile.R;
 public class LogOutFragment extends Fragment {
 
 
-    public static LogOutFragment newInstance() {
-        return new LogOutFragment();
-    }
-
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
@@ -27,7 +23,7 @@ public class LogOutFragment extends Fragment {
         Intent mySuperIntent = new Intent(getContext(), LoginActivity.class);
         mySuperIntent.putExtra("AutoLogin", "false");
         startActivity(mySuperIntent);
-        return inflater.inflate(R.layout.log_out_fragment, container, false);
+        return inflater.inflate(R.layout.fragment_log_out, container, false);
     }
 
     @Override

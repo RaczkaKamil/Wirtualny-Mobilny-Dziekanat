@@ -1,20 +1,18 @@
 package com.wsiz.wd_mobile.JsonAdapter;
 
 public class JsonNews {
-    long ogloszenieid;
-    String tytul;
-    String tresc;
-    long dataut;
-    boolean active;
-    String fileuuid;
-    String filename;
+    private long ogloszenieid;
+    private String tytul;
+    private String tresc;
+    private long dataut;
+    private String fileuuid;
+    private String filename;
 
-    public JsonNews(long ogloszenieid, String tytul, String tresc, long dataut, boolean active, String fileuuid, String filename) {
+    public JsonNews(long ogloszenieid, String tytul, String tresc, long dataut, String fileuuid, String filename) {
         this.ogloszenieid = ogloszenieid;
         this.tytul = tytul;
         this.tresc = tresc;
         this.dataut = dataut;
-        this.active = active;
         this.fileuuid = fileuuid;
         this.filename = filename;
     }
@@ -29,10 +27,6 @@ public class JsonNews {
 
     public long getDataut() {
         return dataut;
-    }
-
-    public boolean isActive() {
-        return active;
     }
 
     public String getFileuuid() {

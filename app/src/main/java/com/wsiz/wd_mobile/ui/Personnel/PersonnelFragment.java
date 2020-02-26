@@ -17,14 +17,13 @@ import java.util.ArrayList;
 public class PersonnelFragment extends Fragment {
 
 
-    ArrayList<String> MessageslistOfString = new ArrayList<String>();
-    PersonelListAdapter customAdapter;
+    private ArrayList<String> MessageslistOfString = new ArrayList<>();
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
         View root = inflater.inflate(R.layout.fragment_personnel, container, false);
-        customAdapter = new PersonelListAdapter(MessageslistOfString, getContext());
+        PersonelListAdapter customAdapter = new PersonelListAdapter(MessageslistOfString, getContext());
         final ListView online_list = root.findViewById(R.id.personel_list);
         online_list.setAdapter(customAdapter);
         online_list.setClickable(false);

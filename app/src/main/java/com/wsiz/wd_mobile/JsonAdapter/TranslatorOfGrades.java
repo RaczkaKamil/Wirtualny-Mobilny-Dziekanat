@@ -1,8 +1,7 @@
 package com.wsiz.wd_mobile.JsonAdapter;
 
 public class TranslatorOfGrades {
-    int notesIn;
-    Double notesOut;
+    private int notesIn;
 
     public TranslatorOfGrades(int notesIn) {
         this.notesIn = notesIn;

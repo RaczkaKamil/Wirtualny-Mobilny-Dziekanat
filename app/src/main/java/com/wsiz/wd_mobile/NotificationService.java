@@ -91,10 +91,7 @@ public class NotificationService  extends Service {
         mNotificationManager.notify(0, mBuilder.build());
 
     }
-    private void showToast(String text) {
-        toast.setText(text);
-        toast.show();
-    }
+
 
 
     private void writeToLogs(String message) {
@@ -152,7 +149,6 @@ public class NotificationService  extends Service {
         clearTimerSchedule();
         initTask();
         timer.scheduleAtFixedRate(timerTask, 10 * 1000, 10 * 1000);
-        showToast("Your service has been started");
         return super.onStartCommand(intent, flags, startId);
     }
 

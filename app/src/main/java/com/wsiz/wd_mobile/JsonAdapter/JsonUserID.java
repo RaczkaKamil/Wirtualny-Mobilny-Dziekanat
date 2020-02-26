@@ -1,17 +1,17 @@
 package com.wsiz.wd_mobile.JsonAdapter;
 
 public class JsonUserID {
-    int studentid;
-    int album;
-    String imie;
-    String nazwisko;
-    String dataRejestracji;
-    boolean active;
-    boolean star;
-    int finid;
-    String email;
-    long phone;
-    String comment;
+    private int studentid;
+    private int album;
+    private String imie;
+    private String nazwisko;
+    private String dataRejestracji;
+    private boolean active;
+    private  boolean star;
+    private  int finid;
+    private String email;
+    private long phone;
+    private String comment;
 
     public JsonUserID(int studentid, int album, String imie, String nazwisko, String dataRejestracji, boolean active, boolean star, int finid, String email, long phone, String comment) {
         this.studentid = studentid;
