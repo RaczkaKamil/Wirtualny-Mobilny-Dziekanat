@@ -20,11 +20,11 @@
 
     <TextView
         android:id="@+id/tf_t3"
-        android:layout_width="180dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
+        android:layout_marginStart="80dp"
         android:layout_marginTop="16dp"
-        android:layout_marginEnd="8dp"
+        android:layout_marginEnd="80dp"
         android:gravity="center"
         android:text="WYŻSZA SZKOŁA INFORMATY... # 03 1240 1170 1111 0010 5635 9825 # KAMIL RĄCZKA ... # PL70 1140 2004 0000 3002 7578 9115 # KAMIL RĄCZKA - CZESNE LUTY # "
         android:textAlignment="center"

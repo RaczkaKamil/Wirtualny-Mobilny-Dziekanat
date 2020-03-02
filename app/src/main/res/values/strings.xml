@@ -12,8 +12,12 @@
     <string name="menu_finances">Finanse</string>
     <string name="menu_semestr">Semestr:</string>
     <string name="menu_lesson">Plan Lekcji</string>
+    <string name="menu_more">Więcej</string>
     <string name="menu_personnel">Personel szkolny</string>
     <string name="menu_info">Informacje</string>
     <string name="actitle_tivity_selected">Informacja</string>
     <string name="menu_log_out">WYLOGUJ</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
