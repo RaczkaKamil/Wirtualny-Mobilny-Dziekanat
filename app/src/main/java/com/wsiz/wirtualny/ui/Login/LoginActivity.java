@@ -1,8 +1,6 @@
-package com.wsiz.wirtualny;
+package com.wsiz.wirtualny.ui.Login;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -13,7 +11,9 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.snackbar.Snackbar;
+import com.wsiz.wirtualny.MainActivity;
 import com.wsiz.wirtualny.Pocket.ConnectionMenager;
+import com.wsiz.wirtualny.R;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
@@ -21,9 +21,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-
-import io.reactivex.Observable;
-import io.reactivex.Observer;
 
 
 public class LoginActivity extends AppCompatActivity{
@@ -37,10 +34,11 @@ public class LoginActivity extends AppCompatActivity{
     Snackbar bar;
 
 
-    ConnectionMenager connectionMenager = new ConnectionMenager(this);
+    ConnectionMenager connectionMenager;
 
-    private Observable<ConnectionMenager> emiter;
-    private Observer<ConnectionMenager> observer;
+
+    public LoginActivity() {
+    }
 
 
     @Override
@@ -54,7 +52,7 @@ public class LoginActivity extends AppCompatActivity{
         bar = Snackbar.make(findViewById(android.R.id.content), "Łączenie...", Snackbar.LENGTH_INDEFINITE);
         Snackbar.SnackbarLayout snack_view = (Snackbar.SnackbarLayout) bar.getView();
         snack_view.addView(new ProgressBar(this));
-
+        connectionMenager  = new ConnectionMenager(this,bar);
 
         tf_login = findViewById(R.id.tf_login);
         tf_password = findViewById(R.id.tf_password);
@@ -126,33 +124,6 @@ public class LoginActivity extends AppCompatActivity{
         connectionMenager.Login(login, encryptedPassword, password);
        DelayLogin();
 
-
-    }
-
-    @SuppressLint("SetTextI18n")
-    private void LastStepOfLogin(boolean isSucces, boolean isConnect) {
-        this.runOnUiThread(() -> {
-            tf_info.setAlpha(0f);
-            if (isSucces && isConnect) {
-                tf_info.setText("Zalogowano");
-                changeSnackBarTExt("Ładowanie...");
-                tf_info.setTextColor(Color.GREEN);
-                tf_info.animate().alpha(1f).setDuration(500);
-                DelayLogin();
-            } else if (!isSucces && isConnect) {
-                tf_info.setText("Błędny Login lub Hasło!");
-                tf_info.setTextColor(Color.RED);
-                tf_info.animate().alpha(1f).setDuration(500);
-            } else if (!isSucces) {
-                tf_info.setText("Błąd serwera!");
-                tf_info.setTextColor(Color.RED);
-                tf_info.animate().alpha(1f).setDuration(500);
-            }
-        });
-    }
-
-    private void changeSnackBarTExt(String text) {
-        this.runOnUiThread(() -> bar.setText(text).show());
 
     }
 

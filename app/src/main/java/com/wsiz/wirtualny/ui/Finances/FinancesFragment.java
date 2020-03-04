@@ -24,7 +24,6 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 public class FinancesFragment extends Fragment {
-    private String TAG = "Finances fragment";
     private ArrayList<String> MessageslistOfString = new ArrayList<>();
     private FinancesListAdapter customAdapterr;
     private Boolean isFinansesLoaded = false;
@@ -34,6 +33,7 @@ public class FinancesFragment extends Fragment {
         View root = inflater.inflate(R.layout.fragment_finances, container, false);
 
         MainActivity activity = (MainActivity) getActivity();
+        assert activity != null;
         activity.setToolbarVisible(false);
 
         customAdapterr = new FinancesListAdapter(MessageslistOfString, getContext());
@@ -56,11 +56,8 @@ public class FinancesFragment extends Fragment {
                         getAvailableFinances("readed oldest finances");
                         isFinansesLoaded = true;
                     }
-
                 }
-
                 getAvailableFinances("readed newest finances");
-
             } catch (IOException | NullPointerException e) {
                 e.printStackTrace();
             }
@@ -81,6 +78,7 @@ public class FinancesFragment extends Fragment {
         while ((data = bufferedReader.readLine()) != null) {
             stringBuffer.append(data).append("\n");
             String splited = stringBuffer.toString();
+            String TAG = "Finances fragment";
             Log.d(TAG,message);
             Gson gson = new Gson();
             JsonFinances[] jsonFinances = gson.fromJson(splited, JsonFinances[].class);

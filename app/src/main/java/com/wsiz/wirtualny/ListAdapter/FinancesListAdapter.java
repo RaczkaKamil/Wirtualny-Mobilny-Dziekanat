@@ -32,8 +32,8 @@ public class FinancesListAdapter extends ArrayAdapter<String> {
             LayoutInflater inflater = LayoutInflater.from(getContext());
             convertView = inflater.inflate(R.layout.list_finances, parent, false);
             viewHolder.data = convertView.findViewById(R.id.tf_t1);
-            viewHolder.tytuł = convertView.findViewById(R.id.tf_t3);
-            viewHolder.kwota = convertView.findViewById(R.id.tf_aktywnosc);
+            viewHolder.title = convertView.findViewById(R.id.tf_t3);
+            viewHolder.price = convertView.findViewById(R.id.tf_aktywnosc);
 
             convertView.setTag(viewHolder);
         } else {
@@ -53,8 +53,8 @@ public class FinancesListAdapter extends ArrayAdapter<String> {
 
 
             viewHolder.data.setText(date1);
-            viewHolder.tytuł.setText(split[2]);
-            viewHolder.kwota.setText(split[3]);
+            viewHolder.title.setText(split[2]);
+            viewHolder.price.setText(split[3]);
 
 
         } catch (ArrayIndexOutOfBoundsException e) {
@@ -66,8 +66,8 @@ public class FinancesListAdapter extends ArrayAdapter<String> {
 
     private class ViewHolder {
         TextView data;
-        TextView tytuł;
-        TextView kwota;
+        TextView title;
+        TextView price;
 
     }
 

@@ -16,7 +16,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 
-import com.wsiz.wirtualny.LoginActivity;
+import com.wsiz.wirtualny.ui.Login.LoginActivity;
 import com.wsiz.wirtualny.MainActivity;
 import com.wsiz.wirtualny.Pocket.FileReader;
 import com.wsiz.wirtualny.R;

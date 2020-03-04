@@ -11,20 +11,31 @@ import java.io.IOException;
 public class FileSaver {
     private String TAG = "FileSaver";
     private Context ctx;
-    private Boolean isTokenSaved=false;
-    private Boolean isAccoutSave=false;
-    private Boolean isUserSave=false;
-    private Boolean isFinancesSaved=false;
-    private Boolean isLecturesSaved=false;
-    private Boolean isGradeSaved=false;
-    private Boolean isNewsSaved=false;
+    private Boolean isTokenSaved;
+    private Boolean isAccoutSave;
+    private Boolean isUserSave;
+    private Boolean isFinancesSaved;
+    private Boolean isLecturesSaved;
+    private Boolean isGradeSaved;
+    private Boolean isNewsSaved;
+    private FileComparator fileComparator;
 
-    public FileSaver (Context ctx){
+
+    FileSaver(Context ctx){
         this.ctx=ctx;
+        isTokenSaved=false;
+        isAccoutSave=false;
+        isUserSave=false;
+        isFinancesSaved=false;
+        isLecturesSaved=false;
+        isGradeSaved=false;
+        isNewsSaved=false;
+
     }
 
-    public void saveNews(String newsJson) {
+    void saveNews(String newsJson) {
         try {
+            fileComparator = new FileComparator(newsJson.length(),"News",ctx);
             FileOutputStream fileOutputStream;
             fileOutputStream = ctx.openFileOutput("News", Context.MODE_PRIVATE);
             fileOutputStream.write(newsJson.getBytes());
@@ -37,11 +48,11 @@ public class FileSaver {
         }
     }
 
-    public void saveLectures(String newsJson) {
+    void saveLectures(String lecturesJson) {
         try {
             FileOutputStream fileOutputStream;
             fileOutputStream = ctx.openFileOutput("Lectures", Context.MODE_PRIVATE);
-            fileOutputStream.write(newsJson.getBytes());
+            fileOutputStream.write(lecturesJson.getBytes());
             fileOutputStream.close();
             Log.d(TAG,"Lectures saved");
             this.isLecturesSaved = true;
@@ -52,8 +63,9 @@ public class FileSaver {
     }
 
 
-    public void saveGrade(String gradeJson) {
+    void saveGrade(String gradeJson) {
         try {
+            fileComparator = new FileComparator(gradeJson.length(),"Grade",ctx);
             FileOutputStream fileOutputStream;
             fileOutputStream = ctx.openFileOutput("Grade", Context.MODE_PRIVATE);
             fileOutputStream.write(gradeJson.getBytes());
@@ -66,8 +78,9 @@ public class FileSaver {
         }
     }
 
-    public void saveFinances(String financesJson) {
+    void saveFinances(String financesJson) {
         try {
+           fileComparator = new FileComparator(financesJson.length(),"Finances",ctx);
             FileOutputStream fileOutputStream;
             fileOutputStream = ctx.openFileOutput("Finances", Context.MODE_PRIVATE);
             fileOutputStream.write(financesJson.getBytes());
@@ -80,7 +93,7 @@ public class FileSaver {
         }
     }
 
-    public void saveUser(JsonUserID jsonUserID) {
+    void saveUser(JsonUserID jsonUserID) {
         try {
             FileOutputStream fileOutputStream;
             fileOutputStream = ctx.openFileOutput("AccountInfo", Context.MODE_PRIVATE);
@@ -116,7 +129,7 @@ public class FileSaver {
     }
 
 
-    public void saveToken(String token) {
+    void saveToken(String token) {
 
         try {
             FileOutputStream fileOutputStream;
@@ -131,7 +144,7 @@ public class FileSaver {
         }
     }
 
-    public void saveLogin(String login,String password) {
+    void saveLogin(String login, String password) {
         try {
             FileOutputStream fileOutputStream;
             fileOutputStream = ctx.openFileOutput("AccountLogin", Context.MODE_PRIVATE);
@@ -148,19 +161,11 @@ public class FileSaver {
     }
 
     public Boolean isLoginComplete(){
-        if(isAccoutSave&&isUserSave&&isTokenSaved){
-            return true;
-        }else{
-            return false;
-        }
+        return isAccoutSave && isUserSave && isTokenSaved;
     }
 
     public Boolean isDownloadCompelted(){
-        if(isNewsSaved&&isFinancesSaved&&isLecturesSaved&&isGradeSaved){
-            return true;
-        }else{
-            return false;
-        }
+        return isNewsSaved && isFinancesSaved && isLecturesSaved && isGradeSaved;
     }
 
 }

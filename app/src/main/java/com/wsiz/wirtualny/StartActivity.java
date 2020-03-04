@@ -12,8 +12,10 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.wsiz.wirtualny.ui.Login.LoginActivity;
+
 public class StartActivity extends AppCompatActivity {
-    ProgressBar splashProgress;
+
     int SPLASH_TIME = 2000;
     TextView logo2;
     ImageView logo;
@@ -23,11 +25,8 @@ public class StartActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start);
 
-        splashProgress = findViewById(R.id.splashProgress);
-        splashProgress.setScaleY(3f);
         logo2 = findViewById(R.id.logo2);
         logo = findViewById(R.id.logo);
-        playProgress();
         handDelay();
         logo.animate().alpha(1f).setDuration(2000);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
@@ -53,11 +52,7 @@ public class StartActivity extends AppCompatActivity {
         }, SPLASH_TIME);
     }
 
-    private void playProgress() {
-        ObjectAnimator.ofInt(splashProgress, "progress", 100)
-                .setDuration(2000)
-                .start();
-    }
+
 
 
 }

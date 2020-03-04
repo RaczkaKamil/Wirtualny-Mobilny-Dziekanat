@@ -1,30 +1,23 @@
 package com.wsiz.wirtualny;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.android.material.navigation.NavigationView;
 import com.wsiz.wirtualny.Pocket.ConnectionMenager;
 import com.wsiz.wirtualny.Pocket.FileReader;
 
 public class MainActivity extends AppCompatActivity {
-    private String TAG = "MainActivity";
-    ConnectionMenager connectionMenager = new ConnectionMenager(this);
+    ConnectionMenager connectionMenager;
     Toolbar toolbar;
-    private AppBarConfiguration mAppBarConfiguration;
 
 
     @Override
@@ -37,11 +30,9 @@ public class MainActivity extends AppCompatActivity {
 
 
         BottomNavigationView navView = findViewById(R.id.nav_view_bottom);
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         toolbar.setVisibility(View.GONE);
-        // Passing each menu ID as a set of Ids because each
-        // menu should be considered as top level destinations.
         AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
                 R.id.nav_news, R.id.nav_grade, R.id.nav_finances, R.id.nav_lesson,R.id.nav_more)
                 .build();
@@ -69,11 +60,12 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private void downloadComponents(){
+    public void downloadComponents(){
         FileReader fileReader = new FileReader();
         fileReader.startReadToken(this);
         fileReader.startReadUserID(this);
 
+        connectionMenager=new ConnectionMenager(this);
         connectionMenager.LocalNews(fileReader.getToken());
         connectionMenager.LocalGrade(String.valueOf(fileReader.getStudentid()));
         connectionMenager.LocalFinances( String.valueOf(fileReader.getFinid()));
@@ -81,11 +73,6 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private void refreshComponents(){
-        Intent intent = new Intent(MainActivity.this,MainActivity.class);
-        startActivity(intent);
-        Toast.makeText(this,"Odświeżono połączenie",Toast.LENGTH_SHORT).show();
-    }
 
 
     public boolean isSaved() {
@@ -98,21 +85,17 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
-    @Override
-    public boolean onSupportNavigateUp() {
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
-        return NavigationUI.navigateUp(navController, mAppBarConfiguration)
-                || super.onSupportNavigateUp();
-    }
+  //  @Override
+  //  public boolean onSupportNavigateUp() {
+   //     NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
+   //     return NavigationUI.navigateUp(navController, mAppBarConfiguration)
+  //              || super.onSupportNavigateUp();
+   // }
+///
+   // private AppBarConfiguration mAppBarConfiguration;
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.action_reload) {
-           refreshComponents();
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
+
+
 
 
     private void startMyService() {

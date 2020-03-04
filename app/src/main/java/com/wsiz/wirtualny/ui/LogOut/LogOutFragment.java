@@ -10,7 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import com.wsiz.wirtualny.LoginActivity;
+import com.wsiz.wirtualny.ui.Login.LoginActivity;
 import com.wsiz.wirtualny.R;
 
 public class LogOutFragment extends Fragment {

@@ -2,6 +2,7 @@ package com.wsiz.wirtualny.ListAdapter;
 
 
 import android.content.Context;
+import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,11 +30,11 @@ public class GradesListAdapter extends ArrayAdapter<String> {
             LayoutInflater inflater = LayoutInflater.from(getContext());
             convertView = inflater.inflate(R.layout.list_grade, parent, false);
 
-            viewHolder.przedmiot = convertView.findViewById(R.id.tf_przedmiot);
+            viewHolder.topic = convertView.findViewById(R.id.tf_przedmiot);
             viewHolder.t1 = convertView.findViewById(R.id.tf_t1);
             viewHolder.t2 = convertView.findViewById(R.id.tf_t2);
             viewHolder.t3 = convertView.findViewById(R.id.tf_t3);
-            viewHolder.aktywnosc = convertView.findViewById(R.id.tf_aktywnosc);
+            viewHolder.activity = convertView.findViewById(R.id.tf_aktywnosc);
             convertView.setTag(viewHolder);
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
@@ -44,7 +45,7 @@ public class GradesListAdapter extends ArrayAdapter<String> {
         try {
             assert dataModel != null;
             String[] split = dataModel.split("~~");
-            viewHolder.przedmiot.setText(split[0]);
+            viewHolder.topic.setText(split[0]);
             if (!split[1].contains("0.0")) {
                 viewHolder.t1.setText(split[1]);
             } else {
@@ -61,9 +62,9 @@ public class GradesListAdapter extends ArrayAdapter<String> {
                 viewHolder.t3.setText("");
             }
             if (!split[4].contains("0.0")) {
-                viewHolder.aktywnosc.setText(split[4]);
+                viewHolder.activity.setText(split[4]);
             } else {
-                viewHolder.aktywnosc.setText("");
+                viewHolder.activity.setText("");
             }
 
 
@@ -75,11 +76,11 @@ public class GradesListAdapter extends ArrayAdapter<String> {
     }
 
     private class ViewHolder {
-        TextView przedmiot;
+        TextView topic;
         TextView t1;
         TextView t2;
         TextView t3;
-        TextView aktywnosc;
+        TextView activity;
 
     }
 

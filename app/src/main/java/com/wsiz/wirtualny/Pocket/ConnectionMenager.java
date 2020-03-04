@@ -3,6 +3,7 @@ package com.wsiz.wirtualny.Pocket;
 import android.content.Context;
 import android.util.Log;
 
+import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.Gson;
 import com.wsiz.wirtualny.JsonAdapter.JsonUserID;
 
@@ -25,6 +26,15 @@ public class ConnectionMenager {
 
     private int errorCount = 0;
 
+    private Snackbar bar;
+
+
+
+    public ConnectionMenager(Context ctx,Snackbar bar) {
+        Log.d(TAG,"Started ConnectionMenager");
+        this.bar=bar;
+        fileSaver = new FileSaver(ctx);
+    }
 
 
     public ConnectionMenager(Context ctx) {
@@ -89,6 +99,7 @@ public class ConnectionMenager {
                     buffer.append(line).append("\n");
                     Log.d("Response: ", "> " + line);
                     if (line.length() == 36) {
+                        bar.setText("Zalogowano...");
                         fileSaver.saveToken(line);
                         fileSaver.saveLogin(LOGIN,PASSWORD);
                         LocalUser(line);
@@ -126,6 +137,7 @@ public class ConnectionMenager {
                     Log.d("Response: ", "> " + line);
                     Gson gson = new Gson();
                     JsonUserID jsonUserID = gson.fromJson(line, JsonUserID.class);
+                    bar.setText("Ładowanie...");
                     fileSaver.saveUser(jsonUserID);
                     Log.d(TAG,"Connected to user");
                 }

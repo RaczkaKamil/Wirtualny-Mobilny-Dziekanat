@@ -1,8 +1,8 @@
 package com.wsiz.wirtualny.JsonAdapter;
 
 public class JsonLectures {
-    long przedmiotid;
-    String nazwa;
+    private long przedmiotid;
+    private String nazwa;
 
     public JsonLectures(long przedmiotid, String nazwa) {
         this.przedmiotid = przedmiotid;

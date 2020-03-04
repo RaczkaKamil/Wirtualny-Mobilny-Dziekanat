@@ -27,7 +27,7 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 public class GradeFragment extends Fragment {
-    String TAG = "Grade fragment";
+    private String TAG = "Grade fragment";
     private JsonGrade[] jsonGrades;
     private JsonLectures[] jsonLectures;
     private ArrayList<String> semestrList = new ArrayList<>();
@@ -45,6 +45,7 @@ public class GradeFragment extends Fragment {
 
        // ((MainActivity) Objects.requireNonNull(getActivity())).setActionBarTitle("Semestr: ");
         MainActivity activity = (MainActivity) getActivity();
+        assert activity != null;
         activity.setToolbarVisible(false);
         tabLayout = root.findViewById(R.id.tabLayout);
         gradesListAdapter = new GradesListAdapter(MessageslistOfString, getContext());
@@ -212,6 +213,7 @@ public class GradeFragment extends Fragment {
                                 double t0 = 0.0;
                                 double t1 = 0.0;
                                 double t2 = 0.0;
+                                double t3 = 0.0;
                                 if (jsonGrade.getTerminid() == 1) {
                                     translator.setNotesIn(jsonGrade.getOcenatypid());
                                     t0 = translator.getNotesOut();
@@ -221,10 +223,26 @@ public class GradeFragment extends Fragment {
                                 } else if (jsonGrade.getTerminid() == 3) {
                                     translator.setNotesIn(jsonGrade.getOcenatypid());
                                     t2 = translator.getNotesOut();
+                                } else if (jsonGrade.getTerminid() == 4) {
+                                    translator.setNotesIn(jsonGrade.getOcenatypid());
+                                    t3 = translator.getNotesOut();
                                 }
 
-                                MessageslistOfString.add(jsonLecture.getNazwa() + "~~" + t0 + "~~" + t1 + "~~" + t2 + "~~" + "0.0");
-                                gradesListAdapter.notifyDataSetChanged();
+                               // System.out.println("----------------");
+                               // System.out.println("PRZEDMIOT: "+jsonLecture.getNazwa());
+                               // System.out.println("OCENA: "+jsonGrade.getOcenatypid());
+                               // System.out.println("TERMIN: "+jsonGrade.getTerminid());
+                                if(t0>0||t1>0||t2>0){
+                                    MessageslistOfString.add(
+                                            jsonLecture.getNazwa() + "~~"
+                                                    + t0 + "~~"
+                                                    + t1 + "~~"
+                                                    + t2 + "~~"
+                                                    + t3);
+
+                                    gradesListAdapter.notifyDataSetChanged();
+                                }
+
                             }
                         }
                     }
