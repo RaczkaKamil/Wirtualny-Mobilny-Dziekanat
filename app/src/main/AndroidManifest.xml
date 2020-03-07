@@ -18,7 +18,7 @@
         tools:ignore="GoogleAppIndexingWarning">
 
         <activity
-            android:name="com.wsiz.wirtualny.StartActivity"
+            android:name="com.wsiz.wirtualny.view.Start.StartActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/app_name"
             android:theme="@style/StartActivity"
@@ -31,24 +31,24 @@
         </activity>
 
         <activity
-            android:name="com.wsiz.wirtualny.ui.Login.LoginActivity"
+            android:name="com.wsiz.wirtualny.view.Login.LoginActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar"
             android:screenOrientation="portrait"/>
 
         <activity
-            android:name="com.wsiz.wirtualny.MainActivity"
+            android:name="com.wsiz.wirtualny.view.Main.MainActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar"
             android:screenOrientation="portrait"/>
         <activity
-            android:name="com.wsiz.wirtualny.ui.SelectedNews.SelectedActivity"
+            android:name="com.wsiz.wirtualny.view.SelectedNews.SelectedActivity"
             android:label="@string/actitle_tivity_selected"
             android:theme="@style/AppTheme.NoActionBar"
             android:screenOrientation="portrait" />
 
 
-        <service android:name="com.wsiz.wirtualny.NotificationService" />
+        <service android:name=".model.Services.NotificationService" />
 
 
     </application>

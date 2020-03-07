@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/nav_news"
-        android:name="com.wsiz.wirtualny.ui.News.NewsFragment"
+        android:name="com.wsiz.wirtualny.view.News.NewsFragment"
         android:label="@string/menu_news"
         tools:layout="@layout/fragment_news" >
         <action
@@ -17,7 +17,7 @@
 
     <fragment
         android:id="@+id/nav_grade"
-        android:name="com.wsiz.wirtualny.ui.Grade.GradeFragment"
+        android:name="com.wsiz.wirtualny.view.Grade.GradeFragment"
         android:label="@string/menu_grade"
         tools:layout="@layout/fragment_grade" >
         <action
@@ -30,7 +30,7 @@
 
     <fragment
         android:id="@+id/nav_finances"
-        android:name="com.wsiz.wirtualny.ui.Finances.FinancesFragment"
+        android:name="com.wsiz.wirtualny.view.Finances.FinancesFragment"
         android:label="@string/menu_finances"
         tools:layout="@layout/fragment_finances" >
         <action
@@ -40,26 +40,26 @@
 
     <fragment
         android:id="@+id/nav_lesson"
-        android:name="com.wsiz.wirtualny.ui.Lesson.LessonFragment"
+        android:name="com.wsiz.wirtualny.view.Lesson.LessonFragment"
         android:label="@string/menu_lesson"
         tools:layout="@layout/fragment_lesson" />
 
     <fragment
         android:id="@+id/nav_personnel"
-        android:name="com.wsiz.wirtualny.ui.Personnel.PersonnelFragment"
+        android:name="com.wsiz.wirtualny.view.Personnel.PersonnelFragment"
         android:label="@string/menu_personnel"
         tools:layout="@layout/fragment_personnel" >
 </fragment>
 
     <fragment
         android:id="@+id/nav_more"
-        android:name="com.wsiz.wirtualny.ui.More.MoreFragment"
+        android:name="com.wsiz.wirtualny.view.More.MoreFragment"
         android:label="@string/menu_more"
         tools:layout="@layout/fragment_more" />
 
     <fragment
         android:id="@+id/log"
-        android:name="com.wsiz.wirtualny.ui.News.NewsFragment"
+        android:name="com.wsiz.wirtualny.view.News.NewsFragment"
         android:label="@string/menu_news"
         tools:layout="@layout/fragment_news" >
         <action
@@ -69,7 +69,7 @@
 
     <fragment
         android:id="@+id/nav_info"
-        android:name="com.wsiz.wirtualny.ui.Info.InfoFragment"
+        android:name="com.wsiz.wirtualny.view.Info.InfoFragment"
         android:label="@string/menu_info"
         tools:layout="@layout/fragment_info" >
         <action
