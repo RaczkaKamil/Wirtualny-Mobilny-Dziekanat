@@ -1,5 +1,6 @@
 package com.wsiz.wirtualny.view.Grade;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -140,22 +141,30 @@ public class GradeFragment extends Fragment {
     }
 
     private void getAvailableLectures(String message, long semestr) throws IOException {
-        String data;
-        FileInputStream fileInputStream;
-        fileInputStream = Objects.requireNonNull(getContext()).openFileInput(getContext().fileList()[getLecturesFileNumber()]);
-        InputStreamReader inputStreamReader = new InputStreamReader(fileInputStream);
-        BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-        StringBuilder stringBuffer = new StringBuilder();
+        try {
 
 
-        while ((data = bufferedReader.readLine()) != null) {
-            stringBuffer.append(data).append("\n");
-            String splited = stringBuffer.toString();
-            Log.d(TAG,message);
-            Gson gson = new Gson();
-            jsonLectures = gson.fromJson(splited, JsonLectures[].class);
-            isLecturesDownloaded = true;
-            setJsonLectures(jsonLectures, semestr);
+            String data;
+            FileInputStream fileInputStream;
+            fileInputStream = Objects.requireNonNull(getContext()).openFileInput(getContext().fileList()[getLecturesFileNumber()]);
+            InputStreamReader inputStreamReader = new InputStreamReader(fileInputStream);
+            BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+            StringBuilder stringBuffer = new StringBuilder();
+
+
+            while ((data = bufferedReader.readLine()) != null) {
+                stringBuffer.append(data).append("\n");
+                String splited = stringBuffer.toString();
+                Log.d(TAG, message);
+                Gson gson = new Gson();
+                jsonLectures = gson.fromJson(splited, JsonLectures[].class);
+                isLecturesDownloaded = true;
+                setJsonLectures(jsonLectures, semestr);
+            }
+        }catch (NullPointerException e){
+            e.fillInStackTrace();
+            Intent intent = new Intent(getContext(),MainActivity.class);
+            startActivity(intent);
         }
     }
 

@@ -2,8 +2,6 @@ package com.wsiz.wirtualny.view.SelectedNews;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.app.DownloadManager;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -20,27 +18,40 @@ import android.widget.Toast;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.app.ActivityCompat;
+import androidx.core.content.FileProvider;
 
-import com.wsiz.wirtualny.view.Main.MainActivity;
 import com.wsiz.wirtualny.R;
+import com.wsiz.wirtualny.model.Pocket.FileReader;
+import com.wsiz.wirtualny.view.Main.MainActivity;
 
+import java.io.DataInputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class SelectedActivity extends AppCompatActivity {
-    String TAG ="SELECTED";
+    private static final int PERMISSION_STORAGE_CODE = 1000;
+    String TAG = "SELECTED";
     TextView tf_tytul;
     TextView tf_data;
     EditText tf_tresc;
     Button btn_download;
     String[] chosed = new String[6];
+    String FILE_URL;
+    String FILE_NAME;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_selected);
         Toolbar toolbar = findViewById(R.id.toolbar);
+
         setSupportActionBar(toolbar);
         toolbar.setTitle("Wiadomość");
 
@@ -66,7 +77,7 @@ public class SelectedActivity extends AppCompatActivity {
             this.chosed = getIntent().getStringArrayExtra("select");
         } catch (NumberFormatException e) {
             Toast.makeText(this, "Błąd otwierania pliku", Toast.LENGTH_SHORT).show();
-            Log.d(TAG,"Błąd otwierania pliku");
+            Log.d(TAG, "Błąd otwierania pliku");
         }
 
         assert chosed != null;
@@ -92,7 +103,8 @@ public class SelectedActivity extends AppCompatActivity {
         } catch (NullPointerException e) {
             e.fillInStackTrace();
         }
-
+        FileReader fileReader = new FileReader();
+        fileReader.startReadToken(this);
 
     }
 
@@ -112,51 +124,66 @@ public class SelectedActivity extends AppCompatActivity {
     }
 
     private void startDownload(String fileName, String fileUUID) {
-        String Uriname = "https://dziekanat.wsi.edu.pl/news/file/" + fileUUID + "/" + fileName;
-        Toast.makeText(this, "Funkcja pobierania będzie niedługo dostępna...", Toast.LENGTH_SHORT).show();
-       // download(Uriname,fileName);
-    }
-
-    public void download(String uriname,String fileName){
-        if(checkPermission()) {
-
-            DownloadManager.Request request = new DownloadManager.Request(Uri.parse(uriname));
-            request.setDescription(fileName);
-            request.setTitle(fileName);
-
-            request.allowScanningByMediaScanner();
-            request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
-
-            request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, fileName);
-
-            DownloadManager manager = (DownloadManager) getSystemService(Context.DOWNLOAD_SERVICE);
-            assert manager != null;
-            manager.enqueue(request);
-        }else{
-            Toast.makeText(this, "Brak uprawnien!", Toast.LENGTH_SHORT).show();
-            Log.d(TAG,"Brak uprawnień!");
+        FileReader fileReader = new FileReader();
+        fileReader.startReadToken(this);
+        this.FILE_URL = "https://dziekanat.wsi.edu.pl/wd-news/files/" + fileUUID + "?wdauth=" + fileReader.getToken();
+        this.FILE_NAME = fileName;
+        if (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                == PackageManager.PERMISSION_DENIED) {
+            String[] permision = {Manifest.permission.WRITE_EXTERNAL_STORAGE};
+            requestPermissions(permision, PERMISSION_STORAGE_CODE);
+        } else {
+            startDownloading();
         }
     }
 
+    private void startDownloading() {
 
-    private boolean checkPermission(){
-        if (checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
-            return true;
-        }else{
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
-            return false;
+        new Thread(this::DownloadFiles).start();
+    }
+
+    public void DownloadFiles() {
+        try {
+            URL u = new URL(FILE_URL);
+            InputStream is = u.openStream();
+
+            DataInputStream dis = new DataInputStream(is);
+
+            byte[] buffer = new byte[1024];
+            int length;
+
+            FileOutputStream fos = new FileOutputStream(new File(Environment.getExternalStorageDirectory() + "/" + FILE_NAME));
+            while ((length = dis.read(buffer)) > 0) {
+                fos.write(buffer, 0, length);
+            }
+            File file = new File(Environment.getExternalStorageDirectory() + "/" + FILE_NAME);
+
+            Uri uri = FileProvider.getUriForFile(this, getPackageName() + ".provider", file);
+            Intent intent = new Intent(Intent.ACTION_VIEW);
+            intent.setData(uri);
+            intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            startActivity(intent);
+
+        } catch (MalformedURLException mue) {
+            Log.e("SYNC getUpdate", "malformed url error", mue);
+        } catch (IOException ioe) {
+            Log.e("SYNC getUpdate", "io error", ioe);
+        } catch (SecurityException se) {
+            Log.e("SYNC getUpdate", "security error", se);
         }
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if(grantResults[0]== PackageManager.PERMISSION_GRANTED){
-
-
-
+@Override
+    public void onRequestPermissionsResult(int requestCode,  String[] permissions,  int[] grantResults) {
+    if (requestCode == PERMISSION_STORAGE_CODE) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                startDownloading();
+            } else {
+                Log.e("SYNC getUpdate", "security denied");
+            }
         }
     }
 
 }
+
 

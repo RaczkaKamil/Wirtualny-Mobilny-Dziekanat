@@ -1,11 +1,13 @@
 package com.wsiz.wirtualny.view.Login;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
+import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.ProgressBar;
@@ -39,11 +41,6 @@ public class LoginActivity extends AppCompatActivity {
 
     ConnectionMenager connectionMenager;
 
-
-    public LoginActivity() {
-    }
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,27 +60,35 @@ public class LoginActivity extends AppCompatActivity {
         bt_login = findViewById(R.id.bt_login);
         btn_offline = findViewById(R.id.btn_offline);
         tf_info.setAlpha(0f);
+        bt_login.setOnClickListener(view ->
+        {
+            hideKeyboard(this);
+            if(tf_login.getText().toString().length()>0){
+                login();
+            }
+
+        });
 
         if (isAutoLoginEnable()) {
             SearchAndSetAccount();
-            login();
+            bt_login.callOnClick();
         } else {
             SearchAndSetAccount();
         }
 
-        bt_login.setOnClickListener(view ->
-        {
 
-            InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-
-            if (inputMethodManager != null)
-            {
-                inputMethodManager.toggleSoftInput(InputMethodManager.SHOW_FORCED,0);
-            }
-            login();
-
-        });
         btn_offline.setOnClickListener(view -> loginOffLine());
+    }
+
+    public static void hideKeyboard(Activity activity) {
+        InputMethodManager imm = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
+        //Find the currently focused view, so we can grab the correct window token from it.
+        View view = activity.getCurrentFocus();
+        //If no view currently has focus, create a new one, just so we can grab a window token from it
+        if (view == null) {
+            view = new View(activity);
+        }
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 
     private boolean isAutoLoginEnable() {
@@ -94,6 +99,8 @@ public class LoginActivity extends AppCompatActivity {
             if (autoLogin.contains("false")) {
                 System.out.println("ZABLOKOWANO LOGOWANIE!");
                 return false;
+            }else {
+                return true;
             }
         } catch (NullPointerException e) {
             e.fillInStackTrace();
@@ -128,15 +135,13 @@ public class LoginActivity extends AppCompatActivity {
 
     private void login() {
         connectionMenager.clearError();
-        String login = tf_login.getText().toString();
+        String login = tf_login.getText().toString().replaceAll("\\s","");
         String password = tf_password.getText().toString();
         String encryptedPassword = md5(password);
         bar.show();
         Log.d("LOGIN", "Login started");
         connectionMenager.Login(login, encryptedPassword, password);
         DelayLogin();
-
-
     }
 
     private void DelayLogin() {
@@ -158,7 +163,6 @@ public class LoginActivity extends AppCompatActivity {
                 tf_info.animate().alpha(1f).setDuration(500);
                 bar.dismiss();
             } else {
-
                 DelayLogin();
             }
 
