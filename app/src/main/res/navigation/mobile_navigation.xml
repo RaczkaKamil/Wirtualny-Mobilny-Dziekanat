@@ -3,16 +3,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@+id/nav_news">
+    app:startDestination="@+id/nav_blank"
+    >
 
     <fragment
         android:id="@+id/nav_news"
         android:name="com.wsiz.wirtualny.view.News.NewsFragment"
         android:label="@string/menu_news"
         tools:layout="@layout/fragment_news" >
-        <action
-            android:id="@+id/action_nav_news_to_nav_grade"
-            app:destination="@id/nav_grade" />
     </fragment>
 
     <fragment
@@ -20,12 +18,6 @@
         android:name="com.wsiz.wirtualny.view.Grade.GradeFragment"
         android:label="@string/menu_grade"
         tools:layout="@layout/fragment_grade" >
-        <action
-            android:id="@+id/action_nav_grade_to_nav_finances"
-            app:destination="@id/nav_finances" />
-        <action
-            android:id="@+id/action_nav_grade_to_nav_news"
-            app:destination="@id/nav_news" />
     </fragment>
 
     <fragment
@@ -33,9 +25,6 @@
         android:name="com.wsiz.wirtualny.view.Finances.FinancesFragment"
         android:label="@string/menu_finances"
         tools:layout="@layout/fragment_finances" >
-        <action
-            android:id="@+id/action_nav_finances_to_nav_grade"
-            app:destination="@id/nav_grade" />
     </fragment>
 
     <fragment
@@ -45,35 +34,21 @@
         tools:layout="@layout/fragment_lesson" />
 
     <fragment
-        android:id="@+id/nav_personnel"
-        android:name="com.wsiz.wirtualny.view.Personnel.PersonnelFragment"
-        android:label="@string/menu_personnel"
-        tools:layout="@layout/fragment_personnel" >
-</fragment>
-
-    <fragment
         android:id="@+id/nav_more"
         android:name="com.wsiz.wirtualny.view.More.MoreFragment"
         android:label="@string/menu_more"
         tools:layout="@layout/fragment_more" />
 
     <fragment
-        android:id="@+id/log"
-        android:name="com.wsiz.wirtualny.view.News.NewsFragment"
-        android:label="@string/menu_news"
-        tools:layout="@layout/fragment_news" >
-        <action
-            android:id="@+id/action_nav_news_to_nav_grade"
-            app:destination="@id/nav_grade" />
-    </fragment>
+        android:id="@+id/nav_blank"
+        android:name="com.wsiz.wirtualny.view.Blank.BlankFragment"
+        android:label="@string/menu_more"
+        tools:layout="@layout/fragment_blank" />
 
     <fragment
         android:id="@+id/nav_info"
         android:name="com.wsiz.wirtualny.view.Info.InfoFragment"
         android:label="@string/menu_info"
         tools:layout="@layout/fragment_info" >
-        <action
-            android:id="@+id/action_nav_news_to_nav_grade"
-            app:destination="@id/nav_grade" />
     </fragment>
 </navigation>

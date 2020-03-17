@@ -12,15 +12,17 @@
         android:title="@string/menu_grade" />
 
     <item
+        android:id="@+id/nav_lesson"
+        android:icon="@drawable/ic_event_black_24dp"
+        android:title="@string/menu_lesson"
+        />
+
+    <item
         android:id="@+id/nav_finances"
         android:icon="@drawable/ic_account_balance_wallet_black_24dp"
         android:title="@string/menu_finances" />
 
-    <item
-        android:id="@+id/nav_lesson"
-        android:icon="@drawable/ic_event_black_24dp"
-        android:title="@string/menu_lesson"
-       />
+
 
     <item
         android:id="@+id/nav_more"

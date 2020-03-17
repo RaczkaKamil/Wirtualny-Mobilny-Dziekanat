@@ -42,15 +42,15 @@ public class GradeFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_grade, container, false);
-        getGrade();
 
-       // ((MainActivity) Objects.requireNonNull(getActivity())).setActionBarTitle("Semestr: ");
         MainActivity activity = (MainActivity) getActivity();
         assert activity != null;
         activity.setToolbarVisible(false);
+
         tabLayout = root.findViewById(R.id.tabLayout);
-        gradesListAdapter = new GradesListAdapter(MessageslistOfString, getContext());
         final ListView online_list = root.findViewById(R.id.list_grade);
+
+        gradesListAdapter = new GradesListAdapter(MessageslistOfString, getContext());
         online_list.setAdapter(gradesListAdapter);
         online_list.setClickable(false);
         gradesListAdapter.notifyDataSetChanged();
@@ -72,7 +72,7 @@ public class GradeFragment extends Fragment {
 
             }
         });
-
+        getGrade();
         return root;
     }
 
@@ -163,8 +163,6 @@ public class GradeFragment extends Fragment {
             }
         }catch (NullPointerException e){
             e.fillInStackTrace();
-            Intent intent = new Intent(getContext(),MainActivity.class);
-            startActivity(intent);
         }
     }
 

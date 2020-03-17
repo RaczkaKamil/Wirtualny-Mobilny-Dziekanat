@@ -226,7 +226,12 @@ public class LessonFragment extends Fragment {
     private void setPdfView(String[] NewestFile){
             File fileLesson = new File(Environment.getExternalStorageDirectory() + "/" + NewestFile[1]);
             pdf_name.setText(NewestFile[0]);
-            pdfViewer.fromFile(fileLesson).load();
+            if(aLesson){
+                pdfViewer.fromFile(fileLesson).defaultPage(0).load();
+            }else {
+                pdfViewer.fromFile(fileLesson).defaultPage(1).load();
+            }
+
     }
 
     private boolean isNewestAlredySetted(String newestName) {

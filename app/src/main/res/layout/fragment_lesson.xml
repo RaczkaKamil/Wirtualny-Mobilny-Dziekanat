@@ -4,52 +4,49 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:clickable="true"
+    android:focusable="true"
     >
 
 
-    <com.google.android.material.tabs.TabLayout
-        android:id="@+id/tabLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/border_tab_layout"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:tabBackground="@drawable/tab_color_selector"
-        app:tabIndicatorColor="@color/colorgrey">
-
-        <com.google.android.material.tabs.TabItem
-            android:id="@+id/sem1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Plan lekcji" />
-
-        <com.google.android.material.tabs.TabItem
-            android:id="@+id/sem2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Kalendarz" />
-
-    </com.google.android.material.tabs.TabLayout>
-
     <include
+        android:id="@+id/include6"
         layout="@layout/list_lesson_layout2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="3dp"
-        android:layout_marginTop="60dp"
+        android:layout_marginTop="70dp"
         android:layout_marginEnd="3dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/pdf_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:gravity="center"
+        android:lines="2"
+        android:shadowColor="@color/text_shadow"
+        android:shadowDx="1"
+        android:shadowDy="1"
+        android:text="Rozkład zajęć na semestr 3 roku pańskiego  "
+        android:textAlignment="center"
+        android:textColor="@color/light_font"
+        android:textSize="25sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tabLayout" />
 
     <include
         layout="@layout/list_lesson_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginStart="3dp"
-        android:layout_marginTop="160dp"
+        android:layout_marginTop="125dp"
         android:layout_marginEnd="3dp"
         android:layout_marginBottom="8dp"
         app:layout_constraintBottom_toBottomOf="parent"

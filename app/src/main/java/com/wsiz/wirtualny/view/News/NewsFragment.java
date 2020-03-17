@@ -47,6 +47,7 @@ public class NewsFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_news, container, false);
+
         customAdapterr = new NewsListAdapter(MessageslistOfString3, getContext());
         swipeRefreshLayout = root.findViewById(R.id.swipe);
         MainActivity activity = (MainActivity) getActivity();
