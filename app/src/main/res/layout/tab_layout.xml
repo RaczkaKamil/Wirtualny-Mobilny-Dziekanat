@@ -64,6 +64,19 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="VII" />
+
+        <com.google.android.material.tabs.TabItem
+            android:id="@+id/sem8"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="VIII" />
+
+        <com.google.android.material.tabs.TabItem
+            android:id="@+id/sem9"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="IX" />
+
     </com.google.android.material.tabs.TabLayout>
 
 

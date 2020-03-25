@@ -27,6 +27,7 @@ public class MoreFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
+
         View root = inflater.inflate(R.layout.fragment_more, container, false);
         MainActivity activity = (MainActivity) getActivity();
         assert activity != null;
@@ -78,13 +79,6 @@ public class MoreFragment extends Fragment {
         wsiz_icon.setOnClickListener(view -> startActivity(new Intent("android.intent.action.VIEW", Uri.parse("https://www.wsi.edu.pl/"))));
 
         return root;
-    }
-
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-
-        // TODO: Use the ViewModel
     }
 }
 

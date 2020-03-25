@@ -1,6 +1,7 @@
 package com.wsiz.wirtualny.view.Main;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
@@ -18,6 +19,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.wsiz.wirtualny.R;
 import com.wsiz.wirtualny.model.Pocket.ConnectionMenager;
 import com.wsiz.wirtualny.model.Pocket.FileReader;
+import com.wsiz.wirtualny.model.Services.NotificationService;
 import com.wsiz.wirtualny.view.Finances.FinancesFragment;
 import com.wsiz.wirtualny.view.Grade.GradeFragment;
 import com.wsiz.wirtualny.view.Lesson.LessonFragment;
@@ -148,8 +150,8 @@ public class MainActivity extends AppCompatActivity     {
 
 
     private void startMyService() {
-        //Intent serviceIntent = new Intent(this, NotificationService.class);
-       // startService(serviceIntent);
+        Intent serviceIntent = new Intent(this, NotificationService.class);
+        startService(serviceIntent);
     }
 
     public void setToolbarVisible(Boolean visible){

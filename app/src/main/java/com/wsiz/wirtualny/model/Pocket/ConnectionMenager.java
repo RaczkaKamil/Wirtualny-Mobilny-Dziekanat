@@ -223,7 +223,7 @@ public class ConnectionMenager {
 
                 while ((line = reader.readLine()) != null) {
                     buffer.append(line).append("\n");
-                    Log.d("Response: ", "> " + line);
+                    Log.d("Response: ", "lectures> " + line);
                     Log.d(TAG,"Connected Lectures");
                     fileSaver.saveLectures(line);
                 }
@@ -259,7 +259,7 @@ public class ConnectionMenager {
 
                 while ((line = reader.readLine()) != null) {
                     buffer.append(line).append("\n");
-                    Log.d("Response: ", "> " + line);
+                    Log.d("Response: ", "grade> " + line);
                     Log.d(TAG,"Connected Grade");
                     fileSaver.saveGrade(line);
                 }

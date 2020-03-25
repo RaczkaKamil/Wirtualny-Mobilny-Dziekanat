@@ -53,13 +53,19 @@ public class GradeFragment extends Fragment {
         gradesListAdapter = new GradesListAdapter(MessageslistOfString, getContext());
         online_list.setAdapter(gradesListAdapter);
         online_list.setClickable(false);
-        gradesListAdapter.notifyDataSetChanged();
 
+
+        gradesListAdapter.notifyDataSetChanged();
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
 
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
-                selectedTab(Long.valueOf(semestrList.get(tab.getPosition())));
+                try{
+                    selectedTab(Long.valueOf(semestrList.get(tab.getPosition())));
+                }catch (IndexOutOfBoundsException e){
+                    selectedTab(Long.valueOf("-1"));
+                    e.fillInStackTrace();
+                }
             }
 
             @Override
@@ -77,17 +83,25 @@ public class GradeFragment extends Fragment {
     }
 
     private void selectedTab(long semestr) {
-        TranslatorOfGrades translator = new TranslatorOfGrades(0);
-        for (JsonGrade jsonGrade : jsonGrades) {
-            if (jsonGrade.getSemestrid() == semestr) {
-                translator.setNotesIn(jsonGrade.getOcenatypid());
+        MessageslistOfString.clear();
+        gradesListAdapter.notifyDataSetChanged();
+        if(semestr==-1){
+            MessageslistOfString.clear();
+            gradesListAdapter.notifyDataSetChanged();
+        }else{
+            TranslatorOfGrades translator = new TranslatorOfGrades(0);
+            for (JsonGrade jsonGrade : jsonGrades) {
+                if (jsonGrade.getSemestrid() == semestr) {
+                    translator.setNotesIn(jsonGrade.getOcenatypid());
+                }
+                setJsonLectures(jsonLectures, semestr);
             }
-            setJsonLectures(jsonLectures, semestr);
         }
+
     }
 
     private void removeTab(int lastId, long lastSemestr) {
-        for (int i = 0; i < 6; i++) {
+        for (int i = 0; i < 8; i++) {
             try {
                 tabLayout.removeTab(Objects.requireNonNull(tabLayout.getTabAt(lastId)));
             } catch (NullPointerException e) {
@@ -95,8 +109,8 @@ public class GradeFragment extends Fragment {
             }
 
         }
-        Objects.requireNonNull(tabLayout.getTabAt(lastId - 1)).select();
-        selectedTab(lastSemestr);
+            Objects.requireNonNull(tabLayout.getTabAt(lastId - 1)).select();
+            selectedTab(lastSemestr);
     }
 
     private void getGrade() {
@@ -109,7 +123,6 @@ public class GradeFragment extends Fragment {
                         getAvailableGrade("readed oldest grades");
                         isGradeLoaded = true;
                     }
-
                 }
                 getAvailableGrade("readed newest grades");
             } catch (IOException | NullPointerException e) {
@@ -192,19 +205,20 @@ public class GradeFragment extends Fragment {
             long semestrid = 0;
 
             for (JsonGrade jsonGrade : jsonGrades) {
-                if (semestrid == 0) {
+              if (semestrid == 0) {
                     semestrid = jsonGrade.getSemestrid();
                     semestrList.add(String.valueOf(semestrid));
                 }
 
                 if (semestrid != jsonGrade.getSemestrid()) {
-                    semestrid = jsonGrade.getSemestrid();
+                    semestrid =jsonGrade.getSemestrid() ;
                     semestrList.add(String.valueOf(semestrid));
                     count++;
                 }
+
             }
             getLectures(semestrid);
-            removeTab(count, semestrid);
+           removeTab(count, semestrid);
         });
     }
 
