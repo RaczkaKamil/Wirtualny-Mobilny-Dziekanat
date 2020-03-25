@@ -2,7 +2,7 @@ package com.wsiz.wirtualny.model.JsonAdapter;
 
 public class JsonUserID {
     private int studentid;
-    private int album;
+    private String album;
     private String imie;
     private String nazwisko;
     private String dataRejestracji;
@@ -13,7 +13,7 @@ public class JsonUserID {
     private long phone;
     private String comment;
 
-    public JsonUserID(int studentid, int album, String imie, String nazwisko, String dataRejestracji, boolean active, boolean star, int finid, String email, long phone, String comment) {
+    public JsonUserID(int studentid, String album, String imie, String nazwisko, String dataRejestracji, boolean active, boolean star, int finid, String email, long phone, String comment) {
         this.studentid = studentid;
         this.album = album;
         this.imie = imie;
@@ -31,7 +31,7 @@ public class JsonUserID {
         return studentid;
     }
 
-    public int getAlbum() {
+    public String getAlbum() {
         return album;
     }
 
