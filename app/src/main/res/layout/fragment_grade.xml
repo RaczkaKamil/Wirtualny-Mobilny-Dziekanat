@@ -50,5 +50,26 @@
         app:layout_constraintStart_toStartOf="@+id/include"
         app:layout_constraintTop_toBottomOf="@+id/textView18" />
 
+    <ImageView
+        android:id="@+id/btn_bug"
+        android:visibility="gone"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="8dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/button_style" />
+
+    <ImageView
+        android:id="@+id/imageView6"
+        android:visibility="gone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@+id/btn_bug"
+        app:layout_constraintEnd_toEndOf="@+id/btn_bug"
+        app:layout_constraintStart_toStartOf="@+id/btn_bug"
+        app:layout_constraintTop_toTopOf="@+id/btn_bug"
+        app:srcCompat="@drawable/ic_bug_report_black_24dp" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -16,13 +16,14 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 
+import com.wsiz.wirtualny.view.Report.BugReportActivity;
 import com.wsiz.wirtualny.view.Login.LoginActivity;
 import com.wsiz.wirtualny.view.Main.MainActivity;
 import com.wsiz.wirtualny.model.Pocket.FileReader;
 import com.wsiz.wirtualny.R;
 
 public class MoreFragment extends Fragment {
-
+    private ImageView btn_bug;
     @SuppressLint("SetTextI18n")
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -32,7 +33,11 @@ public class MoreFragment extends Fragment {
         MainActivity activity = (MainActivity) getActivity();
         assert activity != null;
         activity.setToolbarVisible(false);
-
+        btn_bug = root.findViewById(R.id.btn_bug);
+        btn_bug.setOnClickListener(view -> {
+            Intent intent = new Intent(getActivity(), BugReportActivity.class);
+            startActivity(intent);
+        });
         TextView u_name = root.findViewById(R.id.u_name);
         TextView u_index = root.findViewById(R.id.u_index);
         TextView u_konto = root.findViewById(R.id.u_konto);

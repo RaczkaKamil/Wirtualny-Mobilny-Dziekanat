@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.ListView;
 
 import androidx.annotation.NonNull;
@@ -13,6 +14,7 @@ import androidx.fragment.app.Fragment;
 
 import com.google.android.material.tabs.TabLayout;
 import com.google.gson.Gson;
+import com.wsiz.wirtualny.view.Report.BugReportActivity;
 import com.wsiz.wirtualny.model.JsonAdapter.JsonGrade;
 import com.wsiz.wirtualny.model.JsonAdapter.JsonLectures;
 import com.wsiz.wirtualny.model.JsonAdapter.TranslatorOfGrades;
@@ -28,11 +30,13 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 public class GradeFragment extends Fragment {
+    private ImageView btn_bug;
     private String TAG = "Grade fragment";
     private JsonGrade[] jsonGrades;
     private JsonLectures[] jsonLectures;
     private ArrayList<String> semestrList = new ArrayList<>();
     private ArrayList<String> MessageslistOfString = new ArrayList<>();
+    private ArrayList<String> LogList = new ArrayList<>();
     private GradesListAdapter gradesListAdapter;
     private TabLayout tabLayout;
     private boolean isLecturesDownloaded = false;
@@ -48,12 +52,19 @@ public class GradeFragment extends Fragment {
         activity.setToolbarVisible(false);
 
         tabLayout = root.findViewById(R.id.tabLayout);
+        btn_bug = root.findViewById(R.id.btn_bug);
+        btn_bug.setOnClickListener(view -> {
+            Intent intent = new Intent(getActivity(), BugReportActivity.class);
+            intent.putExtra("bug", LogList);
+            startActivity(intent);
+        });
+
+
         final ListView online_list = root.findViewById(R.id.list_grade);
 
         gradesListAdapter = new GradesListAdapter(MessageslistOfString, getContext());
         online_list.setAdapter(gradesListAdapter);
         online_list.setClickable(false);
-
 
         gradesListAdapter.notifyDataSetChanged();
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
@@ -83,6 +94,8 @@ public class GradeFragment extends Fragment {
     }
 
     private void selectedTab(long semestr) {
+        LogList.add("\n"+"SlectedTab:");
+        LogList.add("\n"+"Semestr: " + semestr);
         MessageslistOfString.clear();
         gradesListAdapter.notifyDataSetChanged();
         if(semestr==-1){
@@ -101,19 +114,30 @@ public class GradeFragment extends Fragment {
     }
 
     private void removeTab(int lastId, long lastSemestr) {
+        LogList.add("\n"+"RemovingTab: ");
+        LogList.add("\n"+"Removing tab to: " + lastId);
         for (int i = 0; i < 8; i++) {
             try {
                 tabLayout.removeTab(Objects.requireNonNull(tabLayout.getTabAt(lastId)));
+                LogList.add("\n"+"Removing tab " + i);
             } catch (NullPointerException e) {
+                LogList.add("\n"+"End removing tab at: "+i);
                 e.fillInStackTrace();
             }
 
         }
-            Objects.requireNonNull(tabLayout.getTabAt(lastId - 1)).select();
+        try{
+            LogList.add("\n"+"Trying get tab at: " + (lastId - 1));
+           Objects.requireNonNull(tabLayout.getTabAt(lastId - 1)).select();
             selectedTab(lastSemestr);
+        }catch (NullPointerException e){
+            e.fillInStackTrace();
+        }
+
     }
 
     private void getGrade() {
+        LogList.add("\n"+"Started getGrade:");
         Thread thread = new Thread(() -> {
             try {
                 MainActivity activity = (MainActivity) getActivity();
@@ -195,6 +219,8 @@ public class GradeFragment extends Fragment {
             Log.d(TAG,message);
             Gson gson = new Gson();
             jsonGrades = gson.fromJson(splited, JsonGrade[].class);
+            LogList.add("\n"+"getAvailableGrade:");
+            LogList.add(splited);
             setJson(jsonGrades);
         }
     }
@@ -215,9 +241,12 @@ public class GradeFragment extends Fragment {
                     semestrList.add(String.valueOf(semestrid));
                     count++;
                 }
-
             }
-            getLectures(semestrid);
+            LogList.add("\n"+"setJsonFromGrades: ");
+            LogList.add("\n"+"semestrID: " + semestrid);
+            LogList.add("\n"+"Count: " + count);
+            LogList.add("\n"+"SemesterListSize: " + semestrList.size());
+           getLectures(semestrid);
            removeTab(count, semestrid);
         });
     }
@@ -226,6 +255,7 @@ public class GradeFragment extends Fragment {
         if (isLecturesDownloaded) {
             Objects.requireNonNull(getActivity()).runOnUiThread(() -> {
                 MessageslistOfString.clear();
+                gradesListAdapter.notifyDataSetChanged();
                 TranslatorOfGrades translator = new TranslatorOfGrades(0);
                 for (JsonGrade jsonGrade : jsonGrades) {
                     for (JsonLectures jsonLecture : jsonLectures) {

@@ -26,56 +26,56 @@
             android:id="@+id/sem1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="I"
+            android:text="1"
             />
 
         <com.google.android.material.tabs.TabItem
             android:id="@+id/sem2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="II" />
+            android:text="2" />
 
         <com.google.android.material.tabs.TabItem
             android:id="@+id/sem3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="III" />
+            android:text="3" />
 
         <com.google.android.material.tabs.TabItem
             android:id="@+id/sem4"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="IV" />
+            android:text="4" />
 
         <com.google.android.material.tabs.TabItem
             android:id="@+id/sem5"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="V" />
+            android:text="5" />
 
         <com.google.android.material.tabs.TabItem
             android:id="@+id/sem6"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="VI" />
+            android:text="6" />
 
         <com.google.android.material.tabs.TabItem
             android:id="@+id/sem7"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="VII" />
+            android:text="7" />
 
         <com.google.android.material.tabs.TabItem
             android:id="@+id/sem8"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="VIII" />
+            android:text="8" />
 
         <com.google.android.material.tabs.TabItem
             android:id="@+id/sem9"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="IX" />
+            android:text="9" />
 
     </com.google.android.material.tabs.TabLayout>
 
