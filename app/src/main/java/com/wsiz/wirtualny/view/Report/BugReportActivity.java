@@ -3,6 +3,8 @@ package com.wsiz.wirtualny.view.Report;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -93,6 +95,11 @@ public class BugReportActivity extends AppCompatActivity {
 
     @SuppressLint("SetTextI18n")
     private void sendEmail(int metchod){
+        try {
+            PackageInfo pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
+            String version = pInfo.versionName;
+
+
         System.out.println(metchod);
         bug_track.setVisibility(View.VISIBLE);
         coppy_text.setVisibility(View.VISIBLE);
@@ -100,9 +107,9 @@ public class BugReportActivity extends AppCompatActivity {
             Intent intent=new Intent(Intent.ACTION_SEND);
             String[] recipients={"raczka.kamil@onet.pl"};
             intent.putExtra(Intent.EXTRA_EMAIL, recipients);
-            intent.putExtra(Intent.EXTRA_SUBJECT,"WD - MOBILE REPORT BUG ( NEWS )");
+            intent.putExtra(Intent.EXTRA_SUBJECT,"WD - MOBILE REPORT BUG ( NEWS ) " + version+ "v");
             intent.putExtra(Intent.EXTRA_TEXT,getFileInfo());
-            bug_track.setText(getFileInfo());
+            bug_track.setText(version+ "v"+ "\n"+getFileInfo());
             intent.putExtra(Intent.EXTRA_CC,"raczka.kamil@onet.pl");
             intent.setType("text/html");
             intent.setPackage("com.google.android.gm");
@@ -111,9 +118,9 @@ public class BugReportActivity extends AppCompatActivity {
             Intent intent=new Intent(Intent.ACTION_SEND);
             String[] recipients={"raczka.kamil@onet.pl"};
             intent.putExtra(Intent.EXTRA_EMAIL, recipients);
-            intent.putExtra(Intent.EXTRA_SUBJECT,"WD - MOBILE REPORT BUG ( OCENY )");
+            intent.putExtra(Intent.EXTRA_SUBJECT,"WD - MOBILE REPORT BUG ( OCENY ) "+ version+ "v");
             intent.putExtra(Intent.EXTRA_TEXT,getFileInfo()+"\n"+ getGradeInfo());
-            bug_track.setText(getFileInfo()+"\n"+ getGradeInfo());
+            bug_track.setText(version+ "v"+ "\n"+getFileInfo()+"\n"+ getGradeInfo());
             intent.putExtra(Intent.EXTRA_CC,"raczka.kamil@onet.pl");
             intent.setType("text/html");
             intent.setPackage("com.google.android.gm");
@@ -122,13 +129,16 @@ public class BugReportActivity extends AppCompatActivity {
             Intent intent=new Intent(Intent.ACTION_SEND);
             String[] recipients={"raczka.kamil@onet.pl"};
             intent.putExtra(Intent.EXTRA_EMAIL, recipients);
-            intent.putExtra(Intent.EXTRA_SUBJECT,"WD - MOBILE REPORT BUG ( FINANSE )");
+            intent.putExtra(Intent.EXTRA_SUBJECT,"WD - MOBILE REPORT BUG ( FINANSE ) "+ version+ "v");
             intent.putExtra(Intent.EXTRA_TEXT,getFileInfo()+"\n"+getFinancesInfo());
-            bug_track.setText(getFileInfo()+"\n"+ getFinancesInfo());
+            bug_track.setText(version+ "v"+ "\n"+getFileInfo()+"\n"+ getFinancesInfo());
             intent.putExtra(Intent.EXTRA_CC,"raczka.kamil@onet.pl");
             intent.setType("text/html");
             intent.setPackage("com.google.android.gm");
             startActivity(Intent.createChooser(intent, "Send mail"));
+        }
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
         }
 
     }

@@ -48,6 +48,25 @@
             app:layout_constraintTop_toTopOf="@+id/btn_bug"
             app:srcCompat="@drawable/ic_bug_report_black_24dp" />
 
+        <TextView
+            android:id="@+id/textView24"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Wersja aplikacji: "
+            app:layout_constraintBottom_toBottomOf="@+id/t_version"
+            app:layout_constraintEnd_toStartOf="@+id/t_version"
+            app:layout_constraintTop_toTopOf="@+id/t_version" />
+
+        <TextView
+            android:id="@+id/t_version"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            android:text="-"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

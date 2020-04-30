@@ -2,6 +2,8 @@ package com.wsiz.wirtualny.view.More;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
@@ -38,6 +40,7 @@ public class MoreFragment extends Fragment {
             Intent intent = new Intent(getActivity(), BugReportActivity.class);
             startActivity(intent);
         });
+        TextView t_version = root.findViewById(R.id.t_version);
         TextView u_name = root.findViewById(R.id.u_name);
         TextView u_index = root.findViewById(R.id.u_index);
         TextView u_konto = root.findViewById(R.id.u_konto);
@@ -82,6 +85,13 @@ public class MoreFragment extends Fragment {
         discord_icon.setOnClickListener(view -> startActivity(new Intent("android.intent.action.VIEW", Uri.parse("https://discordapp.com/channels/555843675293483008/633317533109321738"))));
 
         wsiz_icon.setOnClickListener(view -> startActivity(new Intent("android.intent.action.VIEW", Uri.parse("https://www.wsi.edu.pl/"))));
+        try {
+            PackageInfo pInfo = root.getContext().getPackageManager().getPackageInfo(root.getContext().getPackageName(), 0);
+            String version = pInfo.versionName;
+            t_version.setText(version);
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
 
         return root;
     }
