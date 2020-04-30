@@ -8,12 +8,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import com.google.android.material.tabs.TabLayout;
 import com.google.gson.Gson;
+import com.wsiz.wirtualny.model.JsonAdapter.GradeLecturesList;
+import com.wsiz.wirtualny.model.JsonAdapter.GradeLecturesObiect;
 import com.wsiz.wirtualny.view.Report.BugReportActivity;
 import com.wsiz.wirtualny.model.JsonAdapter.JsonGrade;
 import com.wsiz.wirtualny.model.JsonAdapter.JsonLectures;
@@ -42,6 +45,11 @@ public class GradeFragment extends Fragment {
     private boolean isLecturesDownloaded = false;
     private  boolean isGradeLoaded = false;
     private boolean isLecturesLoaded = false;
+    GradeLecturesList gradeLecturesList = new GradeLecturesList();
+
+    TextView gradecount1;
+    TextView gradecount2;
+
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -61,6 +69,9 @@ public class GradeFragment extends Fragment {
 
 
         final ListView online_list = root.findViewById(R.id.list_grade);
+        gradecount1  = root.findViewById(R.id.gradecount_1);
+        gradecount2  = root.findViewById(R.id.gradecount2);
+
 
         gradesListAdapter = new GradesListAdapter(MessageslistOfString, getContext());
         online_list.setAdapter(gradesListAdapter);
@@ -104,7 +115,7 @@ public class GradeFragment extends Fragment {
         }else{
             TranslatorOfGrades translator = new TranslatorOfGrades(0);
             for (JsonGrade jsonGrade : jsonGrades) {
-                if (jsonGrade.getSemestrid() == semestr) {
+                if (jsonGrade.getSemestrid()==semestr) {
                     translator.setNotesIn(jsonGrade.getOcenatypid());
                 }
                 setJsonLectures(jsonLectures, semestr);
@@ -255,6 +266,7 @@ public class GradeFragment extends Fragment {
         if (isLecturesDownloaded) {
             Objects.requireNonNull(getActivity()).runOnUiThread(() -> {
                 MessageslistOfString.clear();
+                gradeLecturesList.clearList();
                 gradesListAdapter.notifyDataSetChanged();
                 TranslatorOfGrades translator = new TranslatorOfGrades(0);
                 for (JsonGrade jsonGrade : jsonGrades) {
@@ -279,27 +291,25 @@ public class GradeFragment extends Fragment {
                                     t3 = translator.getNotesOut();
                                 }
 
-                               // System.out.println("----------------");
-                               // System.out.println("PRZEDMIOT: "+jsonLecture.getNazwa());
-                               // System.out.println("OCENA: "+jsonGrade.getOcenatypid());
-                               // System.out.println("TERMIN: "+jsonGrade.getTerminid());
-                                if(t0>0||t1>0||t2>0){
-                                    MessageslistOfString.add(
-                                            jsonLecture.getNazwa() + "~~"
-                                                    + t0 + "~~"
-                                                    + t1 + "~~"
-                                                    + t2 + "~~"
-                                                    + t3);
-
-                                    gradesListAdapter.notifyDataSetChanged();
-                                }
+                                GradeLecturesObiect gl = new GradeLecturesObiect(jsonLecture.getNazwa(),t0,t1,t2,t3);
+                                gradeLecturesList.add(gl);
 
                             }
                         }
                     }
                 }
+                gradecount1.setText(gradeLecturesList.getGradeCunter()+"/"+gradeLecturesList.getLecturesList().size());
+                gradecount2.setText(""+gradeLecturesList.getGradeAvg());
+                for (int i = 0; i < gradeLecturesList.getLecturesList().size(); i++) {
+                    MessageslistOfString.add(gradeLecturesList.getLecturesList().get(i).getNazwaPrzedmiotu()
+                            +"~~"+gradeLecturesList.getLecturesList().get(i).getT0()
+                            +"~~"+gradeLecturesList.getLecturesList().get(i).getT1()
+                            +"~~"+gradeLecturesList.getLecturesList().get(i).getT2()
+                            +"~~"+gradeLecturesList.getLecturesList().get(i).getT3());
+                }
 
 
+                gradesListAdapter.notifyDataSetChanged();
             });
         }
 

@@ -3,7 +3,7 @@ apply plugin: 'com.android.application'
 android {
     signingConfigs {
         relase {
-            storeFile file('C:\\Users\\Kamil\\key\\WDMkey.jks')
+            storeFile file('home\\barod\\Dokumenty\\key\\WDMkey.jks')
         }
     }
     compileSdkVersion 29
@@ -12,8 +12,8 @@ android {
         applicationId "com.wsiz.wd_mobile"
         minSdkVersion 23
         targetSdkVersion 29
-        versionCode 22
-        versionName "2.2"
+        versionCode 23
+        versionName "2.3"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {

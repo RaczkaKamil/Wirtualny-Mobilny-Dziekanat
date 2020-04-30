@@ -4,9 +4,9 @@ public class JsonFinances {
     private String date;
     private String type;
     private String details;
-    private  long amount;
+    private  String amount;
 
-    public JsonFinances(String date, String type, String details, long amount) {
+    public JsonFinances(String date, String type, String details, String amount) {
         this.date = date;
         this.type = type;
         this.details = details;
@@ -25,7 +25,7 @@ public class JsonFinances {
         return details;
     }
 
-    public long getAmount() {
+    public String getAmount() {
         return amount;
     }
 

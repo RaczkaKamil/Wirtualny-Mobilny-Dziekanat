@@ -11,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 import com.wsiz.wirtualny.model.JsonAdapter.JsonFinances;
 import com.wsiz.wirtualny.model.ListAdapter.FinancesListAdapter;
 import com.wsiz.wirtualny.view.Main.MainActivity;
@@ -81,8 +82,15 @@ public class FinancesFragment extends Fragment {
             String TAG = "Finances fragment";
             Log.d(TAG,message);
             Gson gson = new Gson();
-            JsonFinances[] jsonFinances = gson.fromJson(splited, JsonFinances[].class);
-            setJson(jsonFinances);
+            try{
+                JsonFinances[] jsonFinances = gson.fromJson(splited, JsonFinances[].class);
+                setJson(jsonFinances);
+            }catch (JsonSyntaxException e){
+                e.fillInStackTrace();
+            }
+
+
+
         }
     }
 
