@@ -16,7 +16,7 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 
-import com.wsiz.wirtualny.view.Main.MainActivity;
+import com.wsiz.wirtualny.view.Activity.Main.MainActivity;
 import com.wsiz.wirtualny.model.Pocket.FileReader;
 import com.wsiz.wirtualny.R;
 
@@ -39,7 +39,7 @@ public class NotificationService  extends Service {
     private class MyTimerTask extends TimerTask {
         @Override
         public void run() {
-            startConntect();
+           // startConntect();
         }
     }
 

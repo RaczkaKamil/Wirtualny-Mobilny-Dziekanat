@@ -1,4 +1,4 @@
-package com.wsiz.wirtualny.view.LogOut;
+package com.wsiz.wirtualny.view.Activity.LogOut;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,7 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import com.wsiz.wirtualny.view.Login.LoginActivity;
+import com.wsiz.wirtualny.view.Activity.Login.LoginActivity;
 import com.wsiz.wirtualny.R;
 
 public class LogOutFragment extends Fragment {

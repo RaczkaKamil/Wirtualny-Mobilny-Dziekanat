@@ -160,6 +160,8 @@ public class FileSaver {
         }
     }
 
+
+
     public Boolean isLoginComplete(){
         return isAccoutSave && isUserSave && isTokenSaved;
     }

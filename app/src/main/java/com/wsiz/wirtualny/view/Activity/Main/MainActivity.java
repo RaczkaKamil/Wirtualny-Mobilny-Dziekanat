@@ -1,4 +1,4 @@
-package com.wsiz.wirtualny.view.Main;
+package com.wsiz.wirtualny.view.Activity.Main;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -18,6 +18,7 @@ import androidx.navigation.ui.NavigationUI;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.wsiz.wirtualny.R;
 import com.wsiz.wirtualny.model.Pocket.ConnectionMenager;
+import com.wsiz.wirtualny.model.Pocket.EasyPreferences;
 import com.wsiz.wirtualny.model.Pocket.FileReader;
 import com.wsiz.wirtualny.model.Services.NotificationService;
 import com.wsiz.wirtualny.view.Finances.FinancesFragment;
@@ -92,7 +93,7 @@ public class MainActivity extends AppCompatActivity     {
         loadFragment(new NewsFragment(), 1);
         downloadComponents();
 
-       // startMyService();
+        startMyService();
 
     }
 
@@ -127,7 +128,7 @@ public class MainActivity extends AppCompatActivity     {
         fileReader.startReadUserID(this);
 
         connectionMenager=new ConnectionMenager(this);
-        connectionMenager.LocalNews(fileReader.getToken());
+        connectionMenager.LocalNews(EasyPreferences.getToken(getApplicationContext()));
         connectionMenager.LocalGrade(String.valueOf(fileReader.getStudentid()));
         connectionMenager.LocalFinances( String.valueOf(fileReader.getFinid()));
         connectionMenager.LocalLectures(String.valueOf(fileReader.getStudentid()));

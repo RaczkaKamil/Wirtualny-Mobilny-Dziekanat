@@ -15,6 +15,7 @@ public class FileReader {
     private int studentID;
     private int finID;
     private String userData;
+    private String cookies;
 
 
     public void startReadToken(Context context) {
@@ -116,4 +117,6 @@ public class FileReader {
     public String getUserData() {
         return this.userData;
     }
+
+
 }

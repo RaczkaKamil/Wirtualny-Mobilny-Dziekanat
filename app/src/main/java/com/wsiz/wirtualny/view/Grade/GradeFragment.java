@@ -17,12 +17,12 @@ import com.google.android.material.tabs.TabLayout;
 import com.google.gson.Gson;
 import com.wsiz.wirtualny.model.JsonAdapter.GradeLecturesList;
 import com.wsiz.wirtualny.model.JsonAdapter.GradeLecturesObiect;
-import com.wsiz.wirtualny.view.Report.BugReportActivity;
+import com.wsiz.wirtualny.view.Activity.Report.BugReportActivity;
 import com.wsiz.wirtualny.model.JsonAdapter.JsonGrade;
 import com.wsiz.wirtualny.model.JsonAdapter.JsonLectures;
 import com.wsiz.wirtualny.model.JsonAdapter.TranslatorOfGrades;
 import com.wsiz.wirtualny.model.ListAdapter.GradesListAdapter;
-import com.wsiz.wirtualny.view.Main.MainActivity;
+import com.wsiz.wirtualny.view.Activity.Main.MainActivity;
 import com.wsiz.wirtualny.R;
 
 import java.io.BufferedReader;

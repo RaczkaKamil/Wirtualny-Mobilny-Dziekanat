@@ -1,4 +1,4 @@
-package com.wsiz.wirtualny.view.Start;
+package com.wsiz.wirtualny.view.Activity.Start;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,7 +11,7 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.wsiz.wirtualny.R;
-import com.wsiz.wirtualny.view.Login.LoginActivity;
+import com.wsiz.wirtualny.view.Activity.Login.LoginActivity;
 
 public class StartActivity extends AppCompatActivity {
 

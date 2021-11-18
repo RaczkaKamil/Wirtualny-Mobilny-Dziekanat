@@ -1,4 +1,4 @@
-package com.wsiz.wirtualny.view.Report;
+package com.wsiz.wirtualny.view.Activity.Report;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -19,7 +19,7 @@ import androidx.appcompat.widget.Toolbar;
 
 import com.wsiz.wirtualny.R;
 import com.wsiz.wirtualny.model.ListAdapter.BugListAdapter;
-import com.wsiz.wirtualny.view.Main.MainActivity;
+import com.wsiz.wirtualny.view.Activity.Main.MainActivity;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;

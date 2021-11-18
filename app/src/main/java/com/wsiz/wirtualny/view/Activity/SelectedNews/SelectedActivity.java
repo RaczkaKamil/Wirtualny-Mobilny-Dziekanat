@@ -1,4 +1,4 @@
-package com.wsiz.wirtualny.view.SelectedNews;
+package com.wsiz.wirtualny.view.Activity.SelectedNews;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -20,19 +20,23 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.FileProvider;
 
+import com.github.barteksc.pdfviewer.PDFView;
 import com.wsiz.wirtualny.R;
+import com.wsiz.wirtualny.model.Pocket.EasyPreferences;
 import com.wsiz.wirtualny.model.Pocket.FileReader;
-import com.wsiz.wirtualny.view.Main.MainActivity;
+import com.wsiz.wirtualny.view.Activity.Main.MainActivity;
 
-import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
+import javax.net.ssl.HttpsURLConnection;
 
 public class SelectedActivity extends AppCompatActivity {
     private static final int PERMISSION_STORAGE_CODE = 1000;
@@ -44,13 +48,16 @@ public class SelectedActivity extends AppCompatActivity {
     String[] chosed = new String[6];
     String FILE_URL;
     String FILE_NAME;
+    PDFView pdfView;
 
 
+    @SuppressLint("SetJavaScriptEnabled")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_selected);
         Toolbar toolbar = findViewById(R.id.toolbar);
+        pdfView = findViewById(R.id.pdfView);
 
         setSupportActionBar(toolbar);
         toolbar.setTitle("Wiadomość");
@@ -93,11 +100,16 @@ public class SelectedActivity extends AppCompatActivity {
         tf_tresc.setKeyListener(null);
 
 
+
+
+
+        pdfView.setVisibility(View.GONE);
         try {
             if (!chosed[4].contains("null")) {
-                btn_download.setText(chosed[4]);
                 btn_download.setVisibility(View.VISIBLE);
+                pdfView.setVisibility(View.VISIBLE);
                 btn_download.setOnClickListener(view -> startDownload(chosed[4], chosed[5]));
+                startDownloadToWebView(chosed[4], chosed[5]);
             }
 
         } catch (NullPointerException e) {
@@ -123,11 +135,30 @@ public class SelectedActivity extends AppCompatActivity {
         return false;
     }
 
+    private void startDownloadToWebView(String fileName, String fileUUID) {
+        FileReader fileReader = new FileReader();
+        fileReader.startReadToken(this);
+        this.FILE_URL = "https://dziekanat.wsi.edu.pl/news/file/" + fileUUID+"/"+fileName ;
+        this.FILE_NAME = fileName;
+
+
+        if (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                == PackageManager.PERMISSION_DENIED) {
+            String[] permision = {Manifest.permission.WRITE_EXTERNAL_STORAGE};
+            requestPermissions(permision, PERMISSION_STORAGE_CODE);
+        } else {
+            startDownloadingToWebView();
+        }
+    }
+
+
     private void startDownload(String fileName, String fileUUID) {
         FileReader fileReader = new FileReader();
         fileReader.startReadToken(this);
-        this.FILE_URL = "https://dziekanat.wsi.edu.pl/wd-news/files/" + fileUUID + "?wdauth=" + fileReader.getToken();
+        this.FILE_URL = "https://dziekanat.wsi.edu.pl/news/file/" + fileUUID+"/"+fileName ;
         this.FILE_NAME = fileName;
+
+
         if (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 == PackageManager.PERMISSION_DENIED) {
             String[] permision = {Manifest.permission.WRITE_EXTERNAL_STORAGE};
@@ -142,21 +173,112 @@ public class SelectedActivity extends AppCompatActivity {
         new Thread(this::DownloadFiles).start();
     }
 
-    public void DownloadFiles() {
+    private void startDownloadingToWebView() {
+
+         new Thread(this::DownloadFiles2).start();
+    }
+
+    public void DownloadFiles2() {
         try {
+
+
+
+                File futureStudioIconFile = new File(Environment.getExternalStorageDirectory() + "/" + FILE_NAME);
+
+             InputStream inputStream = null;
+            OutputStream outputStream = null;
+
             URL u = new URL(FILE_URL);
-            InputStream is = u.openStream();
+            HttpsURLConnection connection = (HttpsURLConnection) u.openConnection();
+            connection.setRequestMethod("GET");
 
-            DataInputStream dis = new DataInputStream(is);
+            connection.setRequestProperty("Cookie", EasyPreferences.getCookies(getApplicationContext()));
+            inputStream = connection.getInputStream();
 
-            byte[] buffer = new byte[1024];
-            int length;
 
-            FileOutputStream fos = new FileOutputStream(new File(Environment.getExternalStorageDirectory() + "/" + FILE_NAME));
-            while ((length = dis.read(buffer)) > 0) {
-                fos.write(buffer, 0, length);
+            byte[] fileReader = new byte[4096];
+
+
+            long fileSizeDownloaded = 0;
+
+            outputStream = new FileOutputStream(futureStudioIconFile);
+
+            while (true) {
+                int read = inputStream.read(fileReader);
+                 if (read == -1) {
+                    break;
+                }
+
+
+                outputStream.write(fileReader, 0, read);
+                fileSizeDownloaded += read;
+
             }
+
+            outputStream.flush();
+
+
             File file = new File(Environment.getExternalStorageDirectory() + "/" + FILE_NAME);
+            pdfView.post(new Runnable() {
+                @Override
+                public void run() {
+                    pdfView.fromFile(file).defaultPage(0).load();
+                }
+            });
+
+
+
+        } catch (MalformedURLException mue) {
+            System.out.println("ERROR 1");
+        } catch (IOException ioe) {
+            System.out.println("ERROR 2");
+        } catch (SecurityException se) {
+            System.out.println("ERROR 3");
+        }
+
+    }
+    public void DownloadFiles()   {
+        try {
+            File futureStudioIconFile = new File(Environment.getExternalStorageDirectory() + "/" + FILE_NAME);
+
+            InputStream inputStream = null;
+            OutputStream outputStream = null;
+
+            URL u = new URL(FILE_URL);
+            HttpsURLConnection connection = (HttpsURLConnection) u.openConnection();
+            connection.setRequestMethod("GET");
+            connection.setRequestProperty("Cookie", "laravel_session=eyJpdiI6IjZaVFB5RDhQdzJFREtzK01JOFwvWFhRPT0iLCJ2YWx1ZSI6InRsNmt5Q1dJaUp4ZUF2UnpvV0pcL2dZU3RSXC9aV3orbEFpYXVxaDhcLzd2c3lNTjhucUZ4XC9nbTIyWkxBYjUxeUtFakJLUkJwekdrQUxDRnFnTUo4cXNpQT09IiwibWFjIjoiYzFhY2IxNDdhM2Y1NTkwNDY5YjBjYTM1N2JjNDU1YWM0YjM4MjE0YzBjZDMzOTQwNTFiMWE1MjU5N2M0NjBjMSJ9");
+            inputStream = connection.getInputStream();
+
+            byte[] fileReader = new byte[4096];
+
+
+            long fileSizeDownloaded = 0;
+
+            outputStream = new FileOutputStream(futureStudioIconFile);
+
+            while (true) {
+                int read = inputStream.read(fileReader);
+                if (read == -1) {
+                    break;
+                }
+
+                outputStream.write(fileReader, 0, read);
+
+                fileSizeDownloaded += read;
+
+            }
+
+            outputStream.flush();
+
+
+            File file = new File(Environment.getExternalStorageDirectory() + "/" + FILE_NAME);
+            pdfView.post(new Runnable() {
+                @Override
+                public void run() {
+                    pdfView.fromFile(file).defaultPage(0).load();
+                }
+            });
 
             Uri uri = FileProvider.getUriForFile(this, getPackageName() + ".provider", file);
             Intent intent = new Intent(Intent.ACTION_VIEW);
@@ -164,13 +286,15 @@ public class SelectedActivity extends AppCompatActivity {
             intent.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
             startActivity(intent);
 
+
         } catch (MalformedURLException mue) {
-            Log.e("SYNC getUpdate", "malformed url error", mue);
+            System.out.println("ERROR 1");
         } catch (IOException ioe) {
-            Log.e("SYNC getUpdate", "io error", ioe);
+            System.out.println("ERROR 2");
         } catch (SecurityException se) {
-            Log.e("SYNC getUpdate", "security error", se);
+            System.out.println("ERROR 3");
         }
+
     }
 
 @Override

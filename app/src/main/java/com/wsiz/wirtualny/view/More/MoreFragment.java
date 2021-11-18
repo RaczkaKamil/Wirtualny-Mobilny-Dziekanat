@@ -18,9 +18,9 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 
-import com.wsiz.wirtualny.view.Report.BugReportActivity;
-import com.wsiz.wirtualny.view.Login.LoginActivity;
-import com.wsiz.wirtualny.view.Main.MainActivity;
+import com.wsiz.wirtualny.view.Activity.Report.BugReportActivity;
+import com.wsiz.wirtualny.view.Activity.Login.LoginActivity;
+import com.wsiz.wirtualny.view.Activity.Main.MainActivity;
 import com.wsiz.wirtualny.model.Pocket.FileReader;
 import com.wsiz.wirtualny.R;
 

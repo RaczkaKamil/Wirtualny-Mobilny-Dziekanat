@@ -20,10 +20,10 @@ import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.wsiz.wirtualny.model.JsonAdapter.JsonNews;
 import com.wsiz.wirtualny.model.ListAdapter.NewsListAdapter;
-import com.wsiz.wirtualny.view.Main.MainActivity;
+import com.wsiz.wirtualny.view.Activity.Main.MainActivity;
 import com.wsiz.wirtualny.R;
-import com.wsiz.wirtualny.view.Login.LoginActivity;
-import com.wsiz.wirtualny.view.SelectedNews.SelectedActivity;
+import com.wsiz.wirtualny.view.Activity.Login.LoginActivity;
+import com.wsiz.wirtualny.view.Activity.SelectedNews.SelectedActivity;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;

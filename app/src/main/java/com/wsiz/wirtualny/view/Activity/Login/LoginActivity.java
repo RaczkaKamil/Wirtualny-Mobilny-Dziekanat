@@ -1,7 +1,6 @@
-package com.wsiz.wirtualny.view.Login;
+package com.wsiz.wirtualny.view.Activity.Login;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -16,7 +15,7 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.snackbar.Snackbar;
-import com.wsiz.wirtualny.view.Main.MainActivity;
+import com.wsiz.wirtualny.view.Activity.Main.MainActivity;
 import com.wsiz.wirtualny.model.Pocket.ConnectionMenager;
 import com.wsiz.wirtualny.R;
 

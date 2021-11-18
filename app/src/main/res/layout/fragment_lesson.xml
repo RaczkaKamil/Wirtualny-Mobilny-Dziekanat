@@ -32,7 +32,7 @@
         android:shadowColor="@color/text_shadow"
         android:shadowDx="1"
         android:shadowDy="1"
-        android:text="Rozkład zajęć na semestr 3 roku pańskiego  "
+        android:text="Rozkład zajęć  "
         android:textAlignment="center"
         android:textColor="@color/light_font"
         android:textSize="25sp"

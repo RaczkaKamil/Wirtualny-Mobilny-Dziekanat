@@ -20,25 +20,25 @@ import com.google.android.material.tabs.TabLayout;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.wsiz.wirtualny.R;
-import com.wsiz.wirtualny.model.JsonAdapter.JsonGrade;
 import com.wsiz.wirtualny.model.JsonAdapter.JsonNews;
-import com.wsiz.wirtualny.model.JsonAdapter.TranslatorOfGrades;
 import com.wsiz.wirtualny.model.Pocket.FileReader;
-import com.wsiz.wirtualny.view.Login.LoginActivity;
-import com.wsiz.wirtualny.view.Main.MainActivity;
+import com.wsiz.wirtualny.view.Activity.Login.LoginActivity;
+import com.wsiz.wirtualny.view.Activity.Main.MainActivity;
 
 import java.io.BufferedReader;
-import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Objects;
+
+import javax.net.ssl.HttpsURLConnection;
 
 public class LessonFragment extends Fragment {
     private static final String TAG = "LessonFragment";
@@ -186,7 +186,7 @@ public class LessonFragment extends Fragment {
                                     + jsonNew.getFileuuid() + "~~"
                                     + jsonNew.getDataut());
                 }
-                if (jsonNew.getTytyl().contains("Organizacja Roku Akademickiego")){
+                if (jsonNew.getTytyl().contains("Zarządzenie rektora")){
                     fileListOrganization.add(
                             jsonNew.getTytyl() + "~~"
                                     + jsonNew.getFilename() + "~~"
@@ -257,7 +257,7 @@ public class LessonFragment extends Fragment {
     private void startDownload(String fileName, String fileUUID) {
         FileReader fileReader = new FileReader();
         fileReader.startReadToken(getContext());
-        this.FILE_URL = "https://dziekanat.wsi.edu.pl/wd-news/files/" + fileUUID + "?wdauth=" + fileReader.getToken();
+        this.FILE_URL = "https://dziekanat.wsi.edu.pl/news/file/" + fileUUID+"/"+fileName+"/" + "?wdauth=" + fileReader.getToken();
         this.FILE_NAME = fileName;
         if (Objects.requireNonNull(getContext()).checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 == PackageManager.PERMISSION_DENIED) {
@@ -275,18 +275,47 @@ public class LessonFragment extends Fragment {
 
     public void DownloadFiles() {
         try {
-            URL u = new URL(FILE_URL);
-            InputStream is = u.openStream();
 
-            DataInputStream dis = new DataInputStream(is);
+                File futureStudioIconFile = new File(Environment.getExternalStorageDirectory() + "/" + FILE_NAME);
 
-            byte[] buffer = new byte[1024];
-            int length;
+                System.out.println("plik znajduje sie w " + futureStudioIconFile.getAbsolutePath());
+                InputStream inputStream = null;
+                OutputStream outputStream = null;
 
-            FileOutputStream fos = new FileOutputStream(new File(Environment.getExternalStorageDirectory() + "/" + FILE_NAME));
-            while ((length = dis.read(buffer)) > 0) {
-                fos.write(buffer, 0, length);
-            }
+                URL u = new URL(FILE_URL);
+                HttpsURLConnection connection = (HttpsURLConnection) u.openConnection();
+                connection.setRequestMethod("GET");
+                connection.setRequestProperty("Cookie", "laravel_session=eyJpdiI6IitWZFNtY21TKzFFM1BhXC85ZEtaUGpnPT0iLCJ2YWx1ZSI6Ikp0d3FXODZ0RzhaZ3lHSVJlRFR5dFRFVTJqQWpZWW50K0NGU1hFd0t0aXN1dFwvQW44RlRGNWQwV3pRWnp3TnpPM0JlRldwalNwMkY5R25BdFpzSUJKZz09IiwibWFjIjoiOTc3OGUyZmI0NmVmZDVkMDk4NTkwN2QyNzY2MzQ4YmMzNTM5NzNjY2Y3NGE0ODg0ZTlmMTEwOWQxOTIzZWVjZiJ9");
+                inputStream = connection.getInputStream();
+
+                byte[] fileReader = new byte[4096];
+
+
+                long fileSizeDownloaded = 0;
+
+                outputStream = new FileOutputStream(futureStudioIconFile);
+
+                while (true) {
+                    int read = inputStream.read(fileReader);
+                    System.out.println("tikam: " + read);
+                    if (read == -1) {
+                        break;
+                    }
+
+                    outputStream.write(fileReader, 0, read);
+
+                    fileSizeDownloaded += read;
+
+                }
+
+                outputStream.flush();
+
+
+                File file = new File(Environment.getExternalStorageDirectory() + "/" + FILE_NAME);
+
+
+
+
 
             getNews();
 

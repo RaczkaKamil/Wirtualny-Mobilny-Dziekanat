@@ -1,7 +1,5 @@
-package com.wsiz.wirtualny.view.Blank;
+package com.wsiz.wirtualny.view.Activity.Blank;
 
-import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -12,7 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.wsiz.wirtualny.R;
-import com.wsiz.wirtualny.view.Main.MainActivity;
+import com.wsiz.wirtualny.view.Activity.Main.MainActivity;
 import com.wsiz.wirtualny.view.News.NewsFragment;
 
 
