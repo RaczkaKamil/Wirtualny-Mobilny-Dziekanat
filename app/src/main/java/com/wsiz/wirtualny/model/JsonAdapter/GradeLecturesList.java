@@ -17,7 +17,6 @@ public class GradeLecturesList {
         for (GradeLecturesObiect obiect : lecturesList) {
             if (obiect.nazwaPrzedmiotu.contains(glo.nazwaPrzedmiotu)) {
                 pass = false;
-                System.out.println("NIE PRZEJDZIESZ!" + glo.nazwaPrzedmiotu);
                 if (obiect.t0 < glo.t0 || obiect.t1 < glo.t1 || obiect.t2 < glo.t2 || obiect.t3 < glo.t3) {
                     obiect.setT0(glo.t0);
                     obiect.setT1(glo.t1);
@@ -35,7 +34,6 @@ public class GradeLecturesList {
 
     public void showList() {
         for (int i = 0; i < lecturesList.size(); i++) {
-            System.out.println(lecturesList.get(i).nazwaPrzedmiotu + lecturesList.get(i).t0 + lecturesList.get(i).t1 + lecturesList.get(i).t2 + lecturesList.get(i).t3);
         }
     }
 

@@ -70,4 +70,21 @@ public class JsonUserID {
     public String getComment() {
         return comment;
     }
+
+    @Override
+    public String toString() {
+        return "JsonUserID{" +
+                "studentid=" + studentid +
+                ", album='" + album + '\'' +
+                ", imie='" + imie + '\'' +
+                ", nazwisko='" + nazwisko + '\'' +
+                ", dataRejestracji='" + dataRejestracji + '\'' +
+                ", active=" + active +
+                ", star=" + star +
+                ", finid=" + finid +
+                ", email='" + email + '\'' +
+                ", phone=" + phone +
+                ", comment='" + comment + '\'' +
+                '}';
+    }
 }

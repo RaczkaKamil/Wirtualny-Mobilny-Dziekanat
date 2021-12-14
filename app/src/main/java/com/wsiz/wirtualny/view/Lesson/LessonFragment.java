@@ -278,7 +278,6 @@ public class LessonFragment extends Fragment {
 
                 File futureStudioIconFile = new File(Environment.getExternalStorageDirectory() + "/" + FILE_NAME);
 
-                System.out.println("plik znajduje sie w " + futureStudioIconFile.getAbsolutePath());
                 InputStream inputStream = null;
                 OutputStream outputStream = null;
 
@@ -297,7 +296,6 @@ public class LessonFragment extends Fragment {
 
                 while (true) {
                     int read = inputStream.read(fileReader);
-                    System.out.println("tikam: " + read);
                     if (read == -1) {
                         break;
                     }

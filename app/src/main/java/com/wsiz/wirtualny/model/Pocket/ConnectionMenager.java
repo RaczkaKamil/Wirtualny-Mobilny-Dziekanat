@@ -108,6 +108,8 @@ Context ctx;
 
     private void connectLogin() {
         Thread thread = new Thread(() -> {
+
+            /*
             RetrofitClientService service = RetrofitClientInstance.getRetrofitInstance().create(RetrofitClientService.class);
             Call<ResponseBody> call = service.logIn();
             call.enqueue(new Callback<ResponseBody>() {
@@ -175,12 +177,11 @@ Context ctx;
                 }
             });
 
+*/
 
 
-            /*
             try {
                 URL url = new URL("https://dziekanat.wsi.edu.pl/get/wd-auth/auth?album=" + LOGIN + "&pass=" + ENCRYPTED_PASSWORD);
-                System.out.println(url.toString());
                 SSLContext  mDefaultSslContext = SSLContext.getInstance("TLS");
                 mDefaultSslContext.init(null, null, null);
                 SSLSocketFactory  mDefaultSslFactory = mDefaultSslContext.getSocketFactory();
@@ -222,7 +223,7 @@ Context ctx;
                         fileSaver.saveToken(line);
                         fileSaver.saveLogin(LOGIN,PASSWORD);
                         String [] cookies = cookie.split(";");
-                         EasyPreferences.setCookies(cookies[0],ctx);
+                         EasyPreferences.setCookies("laravel_session=eyJpdiI6ImlJdnNlMkoxUnZFTzRaVTB3WVdZdXc9PSIsInZhbHVlIjoialc5YU9Pbkc3YWpLSEtWa1p1MFhibVRoaVZkb2JJTDdtdHc3eTY5YVBXNHVUeDdrR3ZQMHFGVGh1aG1zXC9EaGtpXC8zcWVXenlCeXJMV1JjWVwvUWNiblE9PSIsIm1hYyI6ImQ5N2U0YzJhYTM0ZjU5MWJjMWVlNTczZGZhMWQ3YmIwNDhlMTgwMGY4NTdlODUwNDA0MWQwMDAyMDQ2MWZiNWMifQ%3D%3D;",ctx);
                         LocalUser(line);
                         Log.d(TAG,"Connected Login");
                     } else {
@@ -236,18 +237,15 @@ Context ctx;
                 }
 
             } catch (Exception e) {
-                System.out.println(Arrays.toString(e.getStackTrace()));
                 e.fillInStackTrace();
                 Log.d(TAG,"Connected ERROR Login");
                 errorCount++;
                 if (errorCount < 5) {
-                    System.out.println("Blad logowania nr"+errorCount);
                     connectLogin();
                 }else{
                     isError=true;
                 }
             }
-             */
 
 
         });
@@ -255,7 +253,6 @@ Context ctx;
     }
 
     private void connectUser() {
-        System.out.println("TOKEN: " + TOKEN);
         Thread thread = new Thread(() -> {
             try {
                 URL url = new URL("https://dziekanat.wsi.edu.pl/get/wd-auth/user?wdauth=" +TOKEN);
@@ -311,6 +308,7 @@ Context ctx;
                     buffer.append(line).append("\n");
                     Log.d("Response: ", "> " + line);
                     fileSaver.saveFinances(line);
+                    System.out.println("FINANCES: " + line);
                     Log.d(TAG,"Connected finances");
                 }
 
@@ -348,6 +346,7 @@ Context ctx;
                     buffer.append(line).append("\n");
                     Log.d("Response: ", "lectures> " + line);
                     Log.d(TAG,"Connected Lectures");
+                    System.out.println("LECTURES: " + line);
                     fileSaver.saveLectures(line);
                 }
 
@@ -384,6 +383,7 @@ Context ctx;
                     buffer.append(line).append("\n");
                     Log.d("Response: ", "grade> " + line);
                     Log.d(TAG,"Connected Grade");
+                    System.out.println("GRADE: " +line);
                     fileSaver.saveGrade(line);
                 }
 
@@ -418,6 +418,7 @@ Context ctx;
                     buffer.append(line).append("\n");
                     Log.d(TAG,"Connected News");
                     fileSaver.saveNews(line);
+                    System.out.println("NEWS: " +line);
                 }
                 conn.disconnect();
             } catch (Exception e) {

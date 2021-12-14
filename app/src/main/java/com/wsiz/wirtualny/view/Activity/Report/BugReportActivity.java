@@ -100,7 +100,6 @@ public class BugReportActivity extends AppCompatActivity {
             String version = pInfo.versionName;
 
 
-        System.out.println(metchod);
         bug_track.setVisibility(View.VISIBLE);
         coppy_text.setVisibility(View.VISIBLE);
         if(metchod ==0){

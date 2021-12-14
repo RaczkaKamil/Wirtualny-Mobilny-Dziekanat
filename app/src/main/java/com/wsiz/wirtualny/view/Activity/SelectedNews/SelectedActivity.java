@@ -229,11 +229,8 @@ public class SelectedActivity extends AppCompatActivity {
 
 
         } catch (MalformedURLException mue) {
-            System.out.println("ERROR 1");
         } catch (IOException ioe) {
-            System.out.println("ERROR 2");
         } catch (SecurityException se) {
-            System.out.println("ERROR 3");
         }
 
     }
@@ -247,7 +244,7 @@ public class SelectedActivity extends AppCompatActivity {
             URL u = new URL(FILE_URL);
             HttpsURLConnection connection = (HttpsURLConnection) u.openConnection();
             connection.setRequestMethod("GET");
-            connection.setRequestProperty("Cookie", "laravel_session=eyJpdiI6IjZaVFB5RDhQdzJFREtzK01JOFwvWFhRPT0iLCJ2YWx1ZSI6InRsNmt5Q1dJaUp4ZUF2UnpvV0pcL2dZU3RSXC9aV3orbEFpYXVxaDhcLzd2c3lNTjhucUZ4XC9nbTIyWkxBYjUxeUtFakJLUkJwekdrQUxDRnFnTUo4cXNpQT09IiwibWFjIjoiYzFhY2IxNDdhM2Y1NTkwNDY5YjBjYTM1N2JjNDU1YWM0YjM4MjE0YzBjZDMzOTQwNTFiMWE1MjU5N2M0NjBjMSJ9");
+            connection.setRequestProperty("Cookie", EasyPreferences.getCookies(getApplicationContext()));
             inputStream = connection.getInputStream();
 
             byte[] fileReader = new byte[4096];
@@ -288,11 +285,8 @@ public class SelectedActivity extends AppCompatActivity {
 
 
         } catch (MalformedURLException mue) {
-            System.out.println("ERROR 1");
         } catch (IOException ioe) {
-            System.out.println("ERROR 2");
         } catch (SecurityException se) {
-            System.out.println("ERROR 3");
         }
 
     }

@@ -120,7 +120,6 @@ public class NotificationService  extends Service {
 
                 while ((line = reader.readLine()) != null) {
                     buffer.append(line).append("\n");
-                    System.out.println(line.length());
                     setNotification("Rozkład zajęć","Rozkład zajęć na tydzień 1","Nowe ogłoszenie");
                 }
 

@@ -8,7 +8,6 @@ import android.util.Log;
 public class EasyPreferences {
 
     public static void setCookies(String cookies, Context context){
-        System.out.println("SET COOK: " + cookies);
          SharedPreferences preferences = PreferenceManager
                 .getDefaultSharedPreferences(context);
         SharedPreferences.Editor editor = preferences.edit();
@@ -34,7 +33,6 @@ public class EasyPreferences {
         SharedPreferences preferences = PreferenceManager
                 .getDefaultSharedPreferences(context);
       String token = preferences.getString("token", "");
-        System.out.println("RETURN TOKEN: " + token);
         return token;
     }
 

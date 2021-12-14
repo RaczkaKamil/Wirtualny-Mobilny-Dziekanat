@@ -98,10 +98,9 @@ public class MainActivity extends AppCompatActivity     {
     }
 
     public boolean loadFragment(Fragment fragment, int newPosition) {
-        System.out.println(newPosition);
 
         if(fragment != null) {
-            System.out.println("ZNALEZIONO FRAGMENT");
+
             if(startingPosition > newPosition) {
                 FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
                 transaction.setCustomAnimations(R.anim.slide_in_left, R.anim.slide_out_right );
