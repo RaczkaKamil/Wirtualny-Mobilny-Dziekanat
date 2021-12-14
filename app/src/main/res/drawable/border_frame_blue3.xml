@@ -11,11 +11,11 @@
 
 
             <corners
-                android:bottomLeftRadius="20dp"
-                android:bottomRightRadius="20dp"
+                android:bottomLeftRadius="0dp"
+                android:bottomRightRadius="0dp"
                 android:radius="0.1dp"
-                android:topLeftRadius="0dp"
-                android:topRightRadius="0dp" />
+                android:topLeftRadius="20dp"
+                android:topRightRadius="20dp" />
 
         </shape>
     </item>

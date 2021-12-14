@@ -2,8 +2,9 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical" android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="50dp"
     android:background="@drawable/border_frame_blue"
     >
 
@@ -17,7 +18,7 @@
         android:layout_marginBottom="8dp"
         android:shadowColor="@color/text_shadow"
         android:shadowDx="1"
-        android:shadowDy="1"
+         android:shadowDy="1"
         android:text="Data: "
         android:textColor="@color/light_font"
         android:textSize="15sp"

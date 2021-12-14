@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -44,8 +45,7 @@ public class SelectedActivity extends AppCompatActivity {
     TextView tf_tytul;
     TextView tf_data;
     EditText tf_tresc;
-    Button btn_download;
-    String[] chosed = new String[6];
+     String[] chosed = new String[6];
     String FILE_URL;
     String FILE_NAME;
     PDFView pdfView;
@@ -76,8 +76,7 @@ public class SelectedActivity extends AppCompatActivity {
         tf_tytul = findViewById(R.id.tf_tytul);
         tf_data = findViewById(R.id.tf_data);
         tf_tresc = findViewById(R.id.tf_tresc);
-        btn_download = findViewById(R.id.btn_download);
-        btn_download.setVisibility(View.GONE);
+
 
 
         try {
@@ -106,9 +105,8 @@ public class SelectedActivity extends AppCompatActivity {
         pdfView.setVisibility(View.GONE);
         try {
             if (!chosed[4].contains("null")) {
-                btn_download.setVisibility(View.VISIBLE);
-                pdfView.setVisibility(View.VISIBLE);
-                btn_download.setOnClickListener(view -> startDownload(chosed[4], chosed[5]));
+                 pdfView.setVisibility(View.VISIBLE);
+                 startDownload(chosed[4], chosed[5]);
                 startDownloadToWebView(chosed[4], chosed[5]);
             }
 
@@ -119,6 +117,8 @@ public class SelectedActivity extends AppCompatActivity {
         fileReader.startReadToken(this);
 
     }
+
+
 
     @Override
     public void onBackPressed() {
@@ -132,7 +132,18 @@ public class SelectedActivity extends AppCompatActivity {
             onBackPressed();
             return true;
         }
+        if (item.getItemId() == R.id.action_save) {
+            startDownload(chosed[4], chosed[5]);
+            startDownloadToWebView(chosed[4], chosed[5]);
+            return true;
+        }
         return false;
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main, menu);
+        return super.onCreateOptionsMenu(menu);
     }
 
     private void startDownloadToWebView(String fileName, String fileUUID) {

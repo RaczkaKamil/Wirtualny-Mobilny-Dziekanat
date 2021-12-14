@@ -3,34 +3,39 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="5dp"
     android:id="@+id/list_layout"
+    android:background="@android:drawable/dialog_holo_light_frame"
     >
 
     <TextView
         android:id="@+id/tf_t1"
-        android:layout_width="50dp"
+        android:layout_width="70dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:text="2020-01-20"
-        android:textSize="8dp"
+        android:text="01.12.2021"
+        android:textSize="12sp"
         app:layout_constraintBottom_toTopOf="@+id/divider2"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/tf_t3"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="80dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="80dp"
+
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
         android:gravity="center"
         android:text="WYŻSZA SZKOŁA INFORMATY... # 03 1240 1170 1111 0010 5635 9825 # KAMIL RĄCZKA ... # PL70 1140 2004 0000 3002 7578 9115 # KAMIL RĄCZKA - CZESNE LUTY # "
         android:textAlignment="center"
-        android:textSize="8dp"
+        android:textSize="12dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/divider6"
-        app:layout_constraintHorizontal_bias="0.384"
+        app:layout_constraintHorizontal_bias="0.49"
         app:layout_constraintStart_toEndOf="@+id/divider4"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -39,8 +44,8 @@
         android:layout_width="45dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
-        android:text="500.00"
-        android:textSize="8dp"
+        android:text="1500.00"
+        android:textSize="12sp"
         app:layout_constraintBottom_toBottomOf="@+id/tf_t3"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/tf_t3" />
@@ -50,7 +55,7 @@
         android:layout_width="match_parent"
         android:layout_height="2dp"
         android:layout_marginTop="16dp"
-        android:background="?android:attr/listDivider"
+        android:background="@color/colorPrimaryDark"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tf_t3" />
 
@@ -58,7 +63,7 @@
         android:id="@+id/divider3"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="?android:attr/listDivider"
+        android:background="@color/colorPrimaryDark"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 

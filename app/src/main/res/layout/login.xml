@@ -61,40 +61,29 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView2" />
 
-    <View
-        android:id="@+id/divider"
-        android:layout_width="227dp"
-        android:layout_height="1dp"
-        android:layout_marginTop="8dp"
-        android:background="?android:attr/listDivider"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/bt_login" />
 
     <Button
         android:id="@+id/bt_login"
-        android:layout_width="129dp"
-        android:layout_height="80dp"
-        android:layout_marginTop="24dp"
-        android:background="@drawable/button_style"
-        android:elevation="10dp"
-        android:shadowColor="#ffff"
-        android:shadowDx="1"
-        android:shadowDy="1"
-        android:shadowRadius="2"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginTop="8dp"
+
+        android:layout_marginBottom="1dp"
+        android:background="@color/colorPrimaryDark"
         android:text="Zaloguj"
+        android:textColor="@color/colorWhite"
         android:textSize="16sp"
         android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="@+id/tf_password"
-        app:layout_constraintHorizontal_bias="0.467"
-        app:layout_constraintStart_toStartOf="@+id/tf_login"
-        app:layout_constraintTop_toBottomOf="@+id/tf_login" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tf_info" />
 
     <TextView
         android:id="@+id/tf_info"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toTopOf="@+id/bt_login"
+        android:layout_marginTop="16dp"
         app:layout_constraintEnd_toEndOf="@+id/tf_password"
         app:layout_constraintHorizontal_bias="0.502"
         app:layout_constraintStart_toStartOf="@+id/tf_login"

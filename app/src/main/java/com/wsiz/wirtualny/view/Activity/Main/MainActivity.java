@@ -37,13 +37,15 @@ public class MainActivity extends AppCompatActivity     {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_main);
-        getWindow().setStatusBarColor(getResources().getColor(R.color.colorPrimaryDark, this.getTheme()));
+        getWindow().setStatusBarColor(getResources().getColor(R.color.colorPrimary, this.getTheme()));
         getWindow().setNavigationBarColor(getResources().getColor(R.color.colorWhite, this.getTheme()));
+
         BottomNavigationView navView = findViewById(R.id.nav_view_bottom);
 
         toolbar = findViewById(R.id.toolbar);
+        toolbar.setTitle("sa");
         setSupportActionBar(toolbar);
-        toolbar.setVisibility(View.GONE);
+
         AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
                 R.id.nav_news, R.id.nav_grade, R.id.nav_finances, R.id.nav_lesson,R.id.nav_more,R.id.nav_blank)
                 .build();
