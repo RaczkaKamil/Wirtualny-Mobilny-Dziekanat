@@ -28,17 +28,14 @@ import java.security.NoSuchAlgorithmException;
 
 
 public class LoginActivity extends AppCompatActivity {
-    String autoLogin = "";
-    TextView tf_login;
-    TextView tf_password;
-    TextView tf_info;
-    Button bt_login;
-    Button btn_offline;
 
-    Snackbar bar;
-
-
-    ConnectionMenager connectionMenager;
+    private TextView tf_login;
+    private TextView tf_password;
+    private TextView tf_info;
+    private Button bt_login;
+    private Button btn_offline;
+    private Snackbar bar;
+    private ConnectionMenager connectionMenager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,8 +91,7 @@ public class LoginActivity extends AppCompatActivity {
         try {
             Intent intent = getIntent();
             autoLogin = intent.getStringExtra("AutoLogin");
-            assert autoLogin != null;
-            if (autoLogin.contains("false")) {
+             if (autoLogin.contains("false")) {
                 System.out.println("ZABLOKOWANO LOGOWANIE!");
                 return false;
             }else {
@@ -131,7 +127,7 @@ public class LoginActivity extends AppCompatActivity {
             }
         }
     }
-
+    private String autoLogin = "";
     private void login() {
         connectionMenager.clearError();
         String login = tf_login.getText().toString().replaceAll("\\s","");

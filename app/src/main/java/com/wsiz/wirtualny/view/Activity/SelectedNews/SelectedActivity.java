@@ -105,8 +105,9 @@ public class SelectedActivity extends AppCompatActivity {
         pdfView.setVisibility(View.GONE);
         try {
             if (!chosed[4].contains("null")) {
+                System.out.println("EXIST");
                  pdfView.setVisibility(View.VISIBLE);
-                 startDownload(chosed[4], chosed[5]);
+               //  startDownload(chosed[4], chosed[5]);
                 startDownloadToWebView(chosed[4], chosed[5]);
             }
 
@@ -133,8 +134,8 @@ public class SelectedActivity extends AppCompatActivity {
             return true;
         }
         if (item.getItemId() == R.id.action_save) {
-            startDownload(chosed[4], chosed[5]);
-            startDownloadToWebView(chosed[4], chosed[5]);
+         startDownload(chosed[4], chosed[5]);
+        //    startDownloadToWebView(chosed[4], chosed[5]);
             return true;
         }
         return false;
@@ -203,7 +204,7 @@ public class SelectedActivity extends AppCompatActivity {
             HttpsURLConnection connection = (HttpsURLConnection) u.openConnection();
             connection.setRequestMethod("GET");
 
-            connection.setRequestProperty("Cookie", EasyPreferences.getCookies(getApplicationContext()));
+            connection.setRequestProperty("Cookie", EasyPreferences.getCookies());
             inputStream = connection.getInputStream();
 
 
@@ -255,7 +256,7 @@ public class SelectedActivity extends AppCompatActivity {
             URL u = new URL(FILE_URL);
             HttpsURLConnection connection = (HttpsURLConnection) u.openConnection();
             connection.setRequestMethod("GET");
-            connection.setRequestProperty("Cookie", EasyPreferences.getCookies(getApplicationContext()));
+            connection.setRequestProperty("Cookie", EasyPreferences.getCookies());
             inputStream = connection.getInputStream();
 
             byte[] fileReader = new byte[4096];
@@ -304,14 +305,15 @@ public class SelectedActivity extends AppCompatActivity {
 
 @Override
     public void onRequestPermissionsResult(int requestCode,  String[] permissions,  int[] grantResults) {
+    super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     if (requestCode == PERMISSION_STORAGE_CODE) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                startDownloading();
-            } else {
-                Log.e("SYNC getUpdate", "security denied");
-            }
+        if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            startDownloading();
+        } else {
+            Log.e("SYNC getUpdate", "security denied");
         }
     }
+}
 
 }
 

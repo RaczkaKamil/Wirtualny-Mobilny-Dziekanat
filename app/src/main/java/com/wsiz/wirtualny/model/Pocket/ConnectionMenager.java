@@ -1,6 +1,7 @@
 package com.wsiz.wirtualny.model.Pocket;
 
 import android.content.Context;
+import android.os.Handler;
 import android.util.Log;
 
 import com.google.android.material.snackbar.Snackbar;
@@ -78,6 +79,7 @@ Context ctx;
     private void LocalUser(String TOKEN)
     {
         Log.d(TAG,"Started LocalUser");
+        EasyPreferences.setToken(TOKEN);
      this.TOKEN=TOKEN;
      connectUser();
     }
@@ -180,38 +182,21 @@ Context ctx;
 */
 
 
+            BufferedReader reader = null;
+            HttpsURLConnection connection = null;
             try {
                 URL url = new URL("https://dziekanat.wsi.edu.pl/get/wd-auth/auth?album=" + LOGIN + "&pass=" + ENCRYPTED_PASSWORD);
-                SSLContext  mDefaultSslContext = SSLContext.getInstance("TLS");
-                mDefaultSslContext.init(null, null, null);
-                SSLSocketFactory  mDefaultSslFactory = mDefaultSslContext.getSocketFactory();
-
-                SSLContext sslcontext;
-                SSLSocketFactory sslfactory;
-                sslfactory = mDefaultSslFactory;
-
-                // If using this factory, enable session resumption (abbreviated handshake)
-                sslfactory = mDefaultSslContext.getSocketFactory();
-
-                // If using this factory, enable full handshake each time
-                sslcontext = SSLContext.getInstance("TLS");
-                sslcontext.init(null, null, null);
-                sslfactory = sslcontext.getSocketFactory();
+                System.out.println(url.toString());
 
 
 
-
-
-                HttpsURLConnection connection = (HttpsURLConnection) url.openConnection();
+                connection = (HttpsURLConnection) url.openConnection();
                 connection.setDoOutput(true);
                 connection.setDoInput(true);
-                connection.setSSLSocketFactory(sslfactory);
+
                 connection.connect();
-
-                String cookie = connection.getHeaderField("Set-Cookie" );
-
                 InputStream stream = connection.getInputStream();
-                BufferedReader reader;
+
                 reader = new BufferedReader(new InputStreamReader(stream));
                 StringBuilder buffer = new StringBuilder();
                 String line;
@@ -219,11 +204,20 @@ Context ctx;
                     buffer.append(line).append("\n");
                     Log.d("Response: ", "> " + line);
                     if (line.length() == 36) {
-                        bar.setText("Zalogowano...");
+                        Handler handler = new Handler();
+
+                        handler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                bar.setText("Zalogowano...");
+
+                            }
+                        });
                         fileSaver.saveToken(line);
                         fileSaver.saveLogin(LOGIN,PASSWORD);
+                        String cookie = connection.getHeaderField("Set-Cookie" );
                         String [] cookies = cookie.split(";");
-                         EasyPreferences.setCookies("laravel_session=eyJpdiI6ImlJdnNlMkoxUnZFTzRaVTB3WVdZdXc9PSIsInZhbHVlIjoialc5YU9Pbkc3YWpLSEtWa1p1MFhibVRoaVZkb2JJTDdtdHc3eTY5YVBXNHVUeDdrR3ZQMHFGVGh1aG1zXC9EaGtpXC8zcWVXenlCeXJMV1JjWVwvUWNiblE9PSIsIm1hYyI6ImQ5N2U0YzJhYTM0ZjU5MWJjMWVlNTczZGZhMWQ3YmIwNDhlMTgwMGY4NTdlODUwNDA0MWQwMDAyMDQ2MWZiNWMifQ%3D%3D;",ctx);
+                        EasyPreferences.setCookies("laravel_session=eyJpdiI6IlFCRCtcL09qR3hLU0VcL2FyY3Q5RHBDUT09IiwidmFsdWUiOiJ3NW1GbE05YW9lYlFGWDU5RFJRanRWelNGZVRSblZLWTN6N2V0MFBvamI3RmJmcklsZ1NhUVNiTjVMTFRybzNyOU5BVHpUcWdpdVVTV1wvaTlDbmUwOVE9PSIsIm1hYyI6IjkzMWRiODk5ZTQwNTYwOTJjN2JmMDA0ZTQxOWYzNTE1NWNkMjVjNTg5YzkwMTRjNzE2MWQ4YjJmNzVmYTEzZmEifQ");
                         LocalUser(line);
                         Log.d(TAG,"Connected Login");
                     } else {
@@ -235,17 +229,16 @@ Context ctx;
                         }
                     }
                 }
-
-            } catch (Exception e) {
+            } catch (IOException e) {
                 e.fillInStackTrace();
-                Log.d(TAG,"Connected ERROR Login");
-                errorCount++;
-                if (errorCount < 5) {
-                    connectLogin();
-                }else{
-                    isError=true;
-                }
+                e.printStackTrace();
             }
+
+
+
+
+
+
 
 
         });
@@ -256,6 +249,7 @@ Context ctx;
         Thread thread = new Thread(() -> {
             try {
                 URL url = new URL("https://dziekanat.wsi.edu.pl/get/wd-auth/user?wdauth=" +TOKEN);
+                System.out.println(url.toString());
 
                 HttpsURLConnection conn = (HttpsURLConnection) url.openConnection();
                 conn.setDoOutput(true);
@@ -293,6 +287,8 @@ Context ctx;
         Thread thread = new Thread(() -> {
             try {
                 URL url = new URL("https://dziekanat.wsi.edu.pl/get/fin/txs/" + FINANCES_ID + "?wdauth=" + TOKEN);
+                System.out.println(url.toString());
+
                 HttpsURLConnection conn = (HttpsURLConnection) url.openConnection();
                 conn.setDoOutput(true);
                 conn.setDoInput(true);
@@ -331,6 +327,7 @@ Context ctx;
         Thread thread = new Thread(() -> {
             try {
                 URL url = new URL("https://dziekanat.wsi.edu.pl/get/wd-news/lectures?wdauth=" + TOKEN);
+                System.out.println(url.toString());
                 HttpsURLConnection conn = (HttpsURLConnection) url.openConnection();
                 conn.setDoOutput(true);
                 conn.setDoInput(true);
@@ -369,6 +366,7 @@ Context ctx;
         Thread thread = new Thread(() -> {
             try {
                 URL url = new URL("https://dziekanat.wsi.edu.pl/get/wd-news/student/" + STUDENT_ID + "/notes?wdauth=" + TOKEN);
+                System.out.println(url.toString());
                 HttpsURLConnection conn = (HttpsURLConnection) url.openConnection();
                 conn.setDoOutput(true);
                 conn.setDoInput(true);
@@ -406,6 +404,7 @@ Context ctx;
         Thread thread = new Thread(() -> {
             try {
                 URL url = new URL("https://dziekanat.wsi.edu.pl/get/wd-news/news?wdauth=" + TOKEN);
+                System.out.println(url.toString());
                 HttpsURLConnection conn = (HttpsURLConnection) url.openConnection();
                 conn.setDoOutput(true);
                 conn.setDoInput(true);

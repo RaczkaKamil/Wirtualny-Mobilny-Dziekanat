@@ -1,5 +1,7 @@
 package com.wsiz.wirtualny.model.ListAdapter;
 
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -21,6 +23,8 @@ public class NewsListAdapter extends ArrayAdapter<String> {
                                    data, Context context) {
         super(context, R.layout.list_news, data);
     }
+
+
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {

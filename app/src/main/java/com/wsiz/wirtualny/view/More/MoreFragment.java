@@ -25,7 +25,9 @@ import com.wsiz.wirtualny.model.Pocket.FileReader;
 import com.wsiz.wirtualny.R;
 
 public class MoreFragment extends Fragment {
+
     private ImageView btn_bug;
+
     @SuppressLint("SetTextI18n")
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,

@@ -71,8 +71,6 @@ public class MainActivity extends AppCompatActivity     {
                             fragment = new GradeFragment();
                             newPosition = 2;
                             break;
-
-
                         case R.id.nav_lesson:
                             fragment = new LessonFragment();
                             newPosition = 3;
@@ -114,7 +112,6 @@ public class MainActivity extends AppCompatActivity     {
                 transaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left);
                 transaction.replace(R.id.nav_host_fragment, fragment);
                 getSupportFragmentManager().beginTransaction().remove(new NewsFragment()).commit();
-
                 transaction.commit();
             }
             this.startingPosition = newPosition;
@@ -129,7 +126,7 @@ public class MainActivity extends AppCompatActivity     {
         fileReader.startReadUserID(this);
 
         connectionMenager=new ConnectionMenager(this);
-        connectionMenager.LocalNews(EasyPreferences.getToken(getApplicationContext()));
+        connectionMenager.LocalNews(EasyPreferences.getToken());
         connectionMenager.LocalGrade(String.valueOf(fileReader.getStudentid()));
         connectionMenager.LocalFinances( String.valueOf(fileReader.getFinid()));
         connectionMenager.LocalLectures(String.valueOf(fileReader.getStudentid()));

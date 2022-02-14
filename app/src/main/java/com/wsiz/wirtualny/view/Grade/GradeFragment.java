@@ -32,76 +32,74 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Objects;
 
-public class GradeFragment extends Fragment {
-    private ImageView btn_bug;
-    private String TAG = "Grade fragment";
-    private JsonGrade[] jsonGrades;
-    private JsonLectures[] jsonLectures;
-    private ArrayList<String> semestrList = new ArrayList<>();
-    private ArrayList<String> MessageslistOfString = new ArrayList<>();
-    private ArrayList<String> LogList = new ArrayList<>();
-    private GradesListAdapter gradesListAdapter;
-    private TabLayout tabLayout;
-    private boolean isLecturesDownloaded = false;
-    private  boolean isGradeLoaded = false;
-    private boolean isLecturesLoaded = false;
-    GradeLecturesList gradeLecturesList = new GradeLecturesList();
-
-    TextView gradecount1;
-    TextView gradecount2;
-
-
-    public View onCreateView(@NonNull LayoutInflater inflater,
-                             ViewGroup container, Bundle savedInstanceState) {
-        View root = inflater.inflate(R.layout.fragment_grade, container, false);
-
-        MainActivity activity = (MainActivity) getActivity();
-        assert activity != null;
-        activity.setToolbarVisible(false);
-
-        tabLayout = root.findViewById(R.id.tabLayout);
-        btn_bug = root.findViewById(R.id.btn_bug);
-        btn_bug.setOnClickListener(view -> {
-            Intent intent = new Intent(getActivity(), BugReportActivity.class);
-            intent.putExtra("bug", LogList);
-            startActivity(intent);
-        });
+    public class GradeFragment extends Fragment {
+        private ImageView btn_bug;
+        private String TAG = "Grade fragment";
+        private JsonGrade[] jsonGrades;
+        private JsonLectures[] jsonLectures;
+        private ArrayList<String> semestrList = new ArrayList<>();
+        private ArrayList<String> MessageslistOfString = new ArrayList<>();
+        private ArrayList<String> LogList = new ArrayList<>();
+        private GradesListAdapter gradesListAdapter;
+        private TabLayout tabLayout;
+        private boolean isLecturesDownloaded = false;
+        private  boolean isGradeLoaded = false;
+        private boolean isLecturesLoaded = false;
+        private GradeLecturesList gradeLecturesList = new GradeLecturesList();
+        private TextView gradecount1;
+        private TextView gradecount2;
 
 
-        final ListView online_list = root.findViewById(R.id.list_grade);
-        gradecount1  = root.findViewById(R.id.gradecount_1);
-        gradecount2  = root.findViewById(R.id.gradecount2);
+        public View onCreateView(@NonNull LayoutInflater inflater,
+                                 ViewGroup container, Bundle savedInstanceState) {
+            View root = inflater.inflate(R.layout.fragment_grade, container, false);
+
+            MainActivity activity = (MainActivity) getActivity();;
+            activity.setToolbarVisible(false);
+
+            tabLayout = root.findViewById(R.id.tabLayout);
+            btn_bug = root.findViewById(R.id.btn_bug);
+            btn_bug.setOnClickListener(view -> {
+                Intent intent = new Intent(getActivity(), BugReportActivity.class);
+                intent.putExtra("bug", LogList);
+                startActivity(intent);
+            });
 
 
-        gradesListAdapter = new GradesListAdapter(MessageslistOfString, getContext());
-        online_list.setAdapter(gradesListAdapter);
-        online_list.setClickable(false);
+            final ListView online_list = root.findViewById(R.id.list_grade);
+            gradecount1  = root.findViewById(R.id.gradecount_1);
+            gradecount2  = root.findViewById(R.id.gradecount2);
 
-        gradesListAdapter.notifyDataSetChanged();
-        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
 
-            @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-                try{
-                    selectedTab(Long.valueOf(semestrList.get(tab.getPosition())));
-                }catch (IndexOutOfBoundsException e){
-                    selectedTab(Long.valueOf("-1"));
-                    e.fillInStackTrace();
+            gradesListAdapter = new GradesListAdapter(MessageslistOfString, getContext());
+            online_list.setAdapter(gradesListAdapter);
+            online_list.setClickable(false);
+
+            gradesListAdapter.notifyDataSetChanged();
+            tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+
+                @Override
+                public void onTabSelected(TabLayout.Tab tab) {
+                    try{
+                        selectedTab(Long.valueOf(semestrList.get(tab.getPosition())));
+                    }catch (IndexOutOfBoundsException e){
+                        selectedTab(Long.valueOf("-1"));
+                        e.fillInStackTrace();
+                    }
                 }
-            }
 
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
+                @Override
+                public void onTabUnselected(TabLayout.Tab tab) {
 
-            }
+                }
 
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {
+                @Override
+                public void onTabReselected(TabLayout.Tab tab) {
 
-            }
-        });
-        getGrade();
-        return root;
+                }
+            });
+            getGrade();
+            return root;
     }
 
     private void selectedTab(long semestr) {

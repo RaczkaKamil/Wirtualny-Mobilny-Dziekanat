@@ -7,6 +7,7 @@
         <entry key="..\:/Users/Admin/OneDrive/Pulpit/Programista/Studia/Wirtualny-Mobilny-Dziekanat/app/src/main/res/drawable/border_frame_blue.xml" value="0.20260416666666667" />
         <entry key="..\:/Users/Admin/OneDrive/Pulpit/Programista/Studia/Wirtualny-Mobilny-Dziekanat/app/src/main/res/drawable/border_frame_blue2.xml" value="0.20260416666666667" />
         <entry key="..\:/Users/Admin/OneDrive/Pulpit/Programista/Studia/Wirtualny-Mobilny-Dziekanat/app/src/main/res/drawable/border_frame_blue3.xml" value="0.30092592592592593" />
+        <entry key="..\:/Users/Admin/OneDrive/Pulpit/Programista/Studia/Wirtualny-Mobilny-Dziekanat/app/src/main/res/drawable/border_frame_search.xml" value="0.3885416666666667" />
         <entry key="..\:/Users/Admin/OneDrive/Pulpit/Programista/Studia/Wirtualny-Mobilny-Dziekanat/app/src/main/res/drawable/button_style.xml" value="0.23489583333333333" />
         <entry key="..\:/Users/Admin/OneDrive/Pulpit/Programista/Studia/Wirtualny-Mobilny-Dziekanat/app/src/main/res/drawable/button_style2.xml" value="0.23489583333333333" />
         <entry key="..\:/Users/Admin/OneDrive/Pulpit/Programista/Studia/Wirtualny-Mobilny-Dziekanat/app/src/main/res/drawable/tab_color_selector.xml" value="0.30092592592592593" />
@@ -20,12 +21,13 @@
         <entry key="..\:/Users/Admin/OneDrive/Pulpit/Programista/Studia/Wirtualny-Mobilny-Dziekanat/app/src/main/res/layout/content_main.xml" value="0.24322916666666666" />
         <entry key="..\:/Users/Admin/OneDrive/Pulpit/Programista/Studia/Wirtualny-Mobilny-Dziekanat/app/src/main/res/layout/content_selected.xml" value="0.13802083333333334" />
         <entry key="..\:/Users/Admin/OneDrive/Pulpit/Programista/Studia/Wirtualny-Mobilny-Dziekanat/app/src/main/res/layout/content_selected2.xml" value="0.25" />
+        <entry key="..\:/Users/Admin/OneDrive/Pulpit/Programista/Studia/Wirtualny-Mobilny-Dziekanat/app/src/main/res/layout/content_student.xml" value="0.24322916666666666" />
         <entry key="..\:/Users/Admin/OneDrive/Pulpit/Programista/Studia/Wirtualny-Mobilny-Dziekanat/app/src/main/res/layout/fragment_blank.xml" value="0.28532608695652173" />
         <entry key="..\:/Users/Admin/OneDrive/Pulpit/Programista/Studia/Wirtualny-Mobilny-Dziekanat/app/src/main/res/layout/fragment_finances.xml" value="0.27291666666666664" />
-        <entry key="..\:/Users/Admin/OneDrive/Pulpit/Programista/Studia/Wirtualny-Mobilny-Dziekanat/app/src/main/res/layout/fragment_grade.xml" value="0.16" />
+        <entry key="..\:/Users/Admin/OneDrive/Pulpit/Programista/Studia/Wirtualny-Mobilny-Dziekanat/app/src/main/res/layout/fragment_grade.xml" value="0.33" />
         <entry key="..\:/Users/Admin/OneDrive/Pulpit/Programista/Studia/Wirtualny-Mobilny-Dziekanat/app/src/main/res/layout/fragment_lesson.xml" value="0.18" />
         <entry key="..\:/Users/Admin/OneDrive/Pulpit/Programista/Studia/Wirtualny-Mobilny-Dziekanat/app/src/main/res/layout/fragment_more.xml" value="0.18645833333333334" />
-        <entry key="..\:/Users/Admin/OneDrive/Pulpit/Programista/Studia/Wirtualny-Mobilny-Dziekanat/app/src/main/res/layout/fragment_news.xml" value="0.2" />
+        <entry key="..\:/Users/Admin/OneDrive/Pulpit/Programista/Studia/Wirtualny-Mobilny-Dziekanat/app/src/main/res/layout/fragment_news.xml" value="0.33" />
         <entry key="..\:/Users/Admin/OneDrive/Pulpit/Programista/Studia/Wirtualny-Mobilny-Dziekanat/app/src/main/res/layout/list_finances.xml" value="0.29030797101449274" />
         <entry key="..\:/Users/Admin/OneDrive/Pulpit/Programista/Studia/Wirtualny-Mobilny-Dziekanat/app/src/main/res/layout/list_finances_layout_1.xml" value="0.29030797101449274" />
         <entry key="..\:/Users/Admin/OneDrive/Pulpit/Programista/Studia/Wirtualny-Mobilny-Dziekanat/app/src/main/res/layout/list_finances_layout_2.xml" value="0.29030797101449274" />
@@ -36,7 +38,7 @@
         <entry key="..\:/Users/Admin/OneDrive/Pulpit/Programista/Studia/Wirtualny-Mobilny-Dziekanat/app/src/main/res/layout/list_news.xml" value="0.33" />
         <entry key="..\:/Users/Admin/OneDrive/Pulpit/Programista/Studia/Wirtualny-Mobilny-Dziekanat/app/src/main/res/layout/list_news_layout.xml" value="0.18645833333333334" />
         <entry key="..\:/Users/Admin/OneDrive/Pulpit/Programista/Studia/Wirtualny-Mobilny-Dziekanat/app/src/main/res/layout/login.xml" value="0.21875" />
-        <entry key="..\:/Users/Admin/OneDrive/Pulpit/Programista/Studia/Wirtualny-Mobilny-Dziekanat/app/src/main/res/layout/tab_layout.xml" value="0.22" />
+        <entry key="..\:/Users/Admin/OneDrive/Pulpit/Programista/Studia/Wirtualny-Mobilny-Dziekanat/app/src/main/res/layout/tab_layout.xml" value="0.33" />
         <entry key="..\:/Users/Admin/OneDrive/Pulpit/Programista/Studia/Wirtualny-Mobilny-Dziekanat/app/src/main/res/layout/toolbar.xml" value="0.18645833333333334" />
         <entry key="..\:/Users/Admin/OneDrive/Pulpit/Programista/Studia/Wirtualny-Mobilny-Dziekanat/app/src/main/res/menu/main.xml" value="0.3723958333333333" />
       </map>

@@ -8,6 +8,8 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
+        android:name=".model.WSIZ_APP"
+
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcherxxx2_foreground"
         android:label="@string/app_name"
@@ -21,6 +23,7 @@
         <activity
             android:name=".view.Activity.Report.BugReportActivity"
             android:label="@string/title_activity_bug_report"
+            android:exported="true"
             android:theme="@style/AppTheme.NoActionBar"></activity>
 
         <provider
@@ -38,6 +41,7 @@
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
+            android:exported="true"
             android:theme="@style/StartActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -49,15 +53,18 @@
             android:name=".view.Activity.Login.LoginActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
+            android:exported="true"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".view.Activity.Main.MainActivity"
             android:label="@string/app_name"
+            android:exported="true"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".view.Activity.SelectedNews.SelectedActivity"
             android:label="@string/actitle_tivity_selected"
+            android:exported="true"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
 
