@@ -22,34 +22,27 @@ public class FetchFromServerUseCase {
         this.useCases = Arrays.asList(useCases);
      }
 
-    public Observable<Result<GetterResponse>> execute() {
-        List<Observable<Result<GetterResponse>>> observables = new ArrayList<>(useCases.size());
+    public Observable<Result<String>> execute() {
+        List<Observable<Result<String>>> observables = new ArrayList<>(useCases.size());
         for (int i = 0; i < useCases.size(); i++) {
-
             observables.add(useCases.get(i).execute());
         }
         return Observable.zip(observables, args -> {
             for (Object arg : args) {
                 if (arg instanceof Result.Error) {
-
                     Result.error(((Result.Error) arg).getError());
                 }
             }
-            return Result.success(new GetterResponse());
+            return Result.success("");
         });
     }
 
-    public static FetchFromServerUseCase create(@NonNull Api api) {
+    public static FetchFromServerUseCase downloadData(@NonNull Api api) {
         return new FetchFromServerUseCase(
-                new GetLocationFromServerUseCase(api)
+                new GetUserInfoFromServerUseCase(api)
 
         );
     }
 
-    public static FetchFromServerUseCase createWithProduct(@NonNull  Api api) {
-        return new FetchFromServerUseCase(
 
-                new GetLocationFromServerUseCase(api)
-        );
-    }
 }

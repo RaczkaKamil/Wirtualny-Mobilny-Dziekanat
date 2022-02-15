@@ -14,6 +14,8 @@ import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.wsiz.wirtualny.model.JsonAdapter.JsonFinances;
 import com.wsiz.wirtualny.model.ListAdapter.FinancesListAdapter;
+import com.wsiz.wirtualny.presenter.FinancesContract;
+import com.wsiz.wirtualny.presenter.FinancesPresenter;
 import com.wsiz.wirtualny.view.Activity.Main.MainActivity;
 import com.wsiz.wirtualny.R;
 
@@ -25,24 +27,28 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 public class FinancesFragment extends Fragment {
-    private ArrayList<String> MessageslistOfString = new ArrayList<>();
+    private FinancesContract.Presenter presenter;
     private FinancesListAdapter customAdapterr;
+    private MainActivity activity;
+
+    private ArrayList<String> listOfFinances = new ArrayList<>();
     private Boolean isFinansesLoaded = false;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_finances, container, false);
+        presenter = new FinancesPresenter();
 
-        MainActivity activity = (MainActivity) getActivity();
-        assert activity != null;
+        activity = (MainActivity) getActivity();
         activity.setToolbarVisible(false);
 
-        customAdapterr = new FinancesListAdapter(MessageslistOfString, getContext());
         final ListView online_list = root.findViewById(R.id.finanse_list);
         online_list.setAdapter(customAdapterr);
         online_list.setClickable(false);
+        customAdapterr = new FinancesListAdapter(listOfFinances, getContext());
         customAdapterr.notifyDataSetChanged();
 
+        presenter.getFinances();
         getFinances();
         return root;
     }
@@ -106,7 +112,7 @@ public class FinancesFragment extends Fragment {
     private void setJson(JsonFinances[] jsonFinances) {
         Objects.requireNonNull(getActivity()).runOnUiThread(() -> {
             for (JsonFinances jsonFinance : jsonFinances) {
-                MessageslistOfString.add(
+                listOfFinances.add(
                         jsonFinance.getDate() + "~~" +
                                 jsonFinance.getType() + "~~" +
                                 jsonFinance.getDetails() + "~~" +

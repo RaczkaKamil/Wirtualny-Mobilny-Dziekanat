@@ -100,7 +100,6 @@ public class MainActivity extends AppCompatActivity     {
     public boolean loadFragment(Fragment fragment, int newPosition) {
 
         if(fragment != null) {
-
             if(startingPosition > newPosition) {
                 FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
                 transaction.setCustomAnimations(R.anim.slide_in_left, R.anim.slide_out_right );
@@ -117,20 +116,12 @@ public class MainActivity extends AppCompatActivity     {
             this.startingPosition = newPosition;
             return true;
         }
-
         return false;
     }
+
     public void downloadComponents(){
-        FileReader fileReader = new FileReader();
-        fileReader.startReadToken(this);
-        fileReader.startReadUserID(this);
-
         connectionMenager=new ConnectionMenager(this);
-        connectionMenager.LocalNews(EasyPreferences.getToken());
-        connectionMenager.LocalGrade(String.valueOf(fileReader.getStudentid()));
-        connectionMenager.LocalFinances( String.valueOf(fileReader.getFinid()));
-        connectionMenager.LocalLectures(String.valueOf(fileReader.getStudentid()));
-
+        connectionMenager.downloadData();
     }
 
 

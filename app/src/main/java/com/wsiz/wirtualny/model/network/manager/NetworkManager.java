@@ -17,13 +17,23 @@ import com.wsiz.wirtualny.model.db.RealmString;
 import com.wsiz.wirtualny.model.network.Api;
 
 import java.io.IOException;
+import java.net.CookieHandler;
+import java.net.CookieManager;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 
 
 import io.realm.RealmList;
 import io.realm.RealmObject;
+import okhttp3.ConnectionPool;
+import okhttp3.Cookie;
+import okhttp3.CookieJar;
+import okhttp3.HttpUrl;
 import okhttp3.Interceptor;
+import okhttp3.JavaNetCookieJar;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
@@ -38,6 +48,9 @@ import retrofit2.converter.scalars.ScalarsConverterFactory;
  */
 
 public class NetworkManager {
+     private static NetworkManager instance;
+    private final Api apiService;
+    private final OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
 
     private static final Gson GSON = new GsonBuilder()
             .serializeNulls()
@@ -60,9 +73,6 @@ public class NetworkManager {
             }.getType(), new IntegerTypeAdapter())
 
             .create();
-    private static NetworkManager instance;
-    private final Api apiService;
-    private final OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
 
     private NetworkManager() {
         Retrofit.Builder jsonBuilder = new Retrofit.Builder()
@@ -74,11 +84,18 @@ public class NetworkManager {
     }
 
     private <S> S createRetrofitService(Class<S> serviceClass, Retrofit.Builder builder) {
+        System.out.println("CREATE RETROFITE");
+        ConnectionPool connectionPool = new ConnectionPool(10, 10000, TimeUnit.MINUTES);
+
         Retrofit retrofit = builder
                 .client(httpClient
+                        .cookieJar(new JavaNetCookieJar(new CookieManager()))
+                        .pingInterval(2,TimeUnit.SECONDS)
+                        .connectionPool(connectionPool)
                         .connectTimeout(35, TimeUnit.SECONDS)
                         .readTimeout(35, TimeUnit.SECONDS)
                         .writeTimeout(35, TimeUnit.SECONDS)
+
                         .addInterceptor(createLoggingInterceptor())
                         .build())
                 .build();
@@ -144,6 +161,27 @@ public class NetworkManager {
             }
             in.endArray();
             return list;
+        }
+    }
+
+    private static class SessionCookieJar implements CookieJar {
+
+        private List<Cookie> cookies;
+
+        @Override
+        public void saveFromResponse(HttpUrl url, List<Cookie> cookies) {
+            if (url.encodedPath().endsWith("login")) {
+                this.cookies = new ArrayList<>(cookies);
+            }
+        }
+
+
+        @Override
+        public List<Cookie> loadForRequest(HttpUrl url) {
+            if (!url.encodedPath().endsWith("login") && cookies != null) {
+                return cookies;
+            }
+            return Collections.emptyList();
         }
     }
 }

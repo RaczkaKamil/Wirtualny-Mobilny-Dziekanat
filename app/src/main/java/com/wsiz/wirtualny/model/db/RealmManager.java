@@ -24,7 +24,7 @@ public class RealmManager {
 
 
 
-    public static DatabaseDao createUserCountDao() {
+    public static DatabaseDao createDatabaseDao() {
         checkForOpenRealm();
         return new DatabaseDao(realm);
     }

@@ -42,46 +42,42 @@ public class RetrofitClientInstance {
         HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
 
         logging.setLevel(HttpLoggingInterceptor.Level.BODY);
-        ConnectionPool connectionPool = new ConnectionPool(10, 10, TimeUnit.MINUTES);
+        ConnectionPool connectionPool = new ConnectionPool(10, 10000, TimeUnit.MINUTES);
 
         OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
-        httpClient.connectionPool(connectionPool)
+        httpClient.cookieJar(new SessionCookieJar())
+        .connectionPool(connectionPool)
                 .connectTimeout(5, TimeUnit.MINUTES)
                 .readTimeout(5, TimeUnit.MINUTES);
         httpClient.interceptors().add(logging);
 
-        httpClient.interceptors().add(new Interceptor() {
-            @NotNull
-            @Override
-            public Response intercept(@NotNull Chain chain) throws
-                    IOException {
-                Request original = chain.request();
+        httpClient.interceptors().add(chain -> {
+            Request original = chain.request();
 
-                // Customize the request
-                Request request = original.newBuilder()
-                        .header("Connection", "Keep-Alive")
-                        .method(original.method(), original.body())
-                        .build();
+            // Customize the request
+            Request request = original.newBuilder()
+                    .header("Connection", "Keep-Alive")
+                    .method(original.method(), original.body())
+                    .build();
 
-                Response response = chain.proceed(request);
+            Response response = chain.proceed(request);
 
-                if (!response.isSuccessful() || response.code()==503) {
-                    connectionPool.evictAll();
-                    return chain.proceed(request);
-                } else {
-                    // Customize or return the response
-                    return response;
-                }
+            if (!response.isSuccessful() || response.code()==503) {
+                connectionPool.evictAll();
+                return chain.proceed(request);
+            } else {
+                 return response;
             }
         });
-        OkHttpClient client = httpClient.build();
+
+        OkHttpClient client = httpClient
+                .cookieJar(new SessionCookieJar())
+                .build();
         if (retrofit == null) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 retrofit = new Retrofit.Builder()
                         .baseUrl(BASE_URL)
-
-                        .client(
-                                client)
+                        .client(client)
                         .addConverterFactory(GsonConverterFactory.create())
                         .build();
             }
@@ -94,7 +90,7 @@ public class RetrofitClientInstance {
 
         @Override
         public void saveFromResponse(HttpUrl url, List<Cookie> cookies) {
-
+            System.out.println("SAVE COOKIE");
             System.out.println("SAVE COOKIE: " + cookies.toString());
             if (url.encodedPath().endsWith("login")) {
                 this.cookies = new ArrayList<>(cookies);

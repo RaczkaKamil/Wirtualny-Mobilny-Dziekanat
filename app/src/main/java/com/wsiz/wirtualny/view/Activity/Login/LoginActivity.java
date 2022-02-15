@@ -135,31 +135,33 @@ public class LoginActivity extends AppCompatActivity {
         String encryptedPassword = md5(password);
         bar.show();
         Log.d("LOGIN", "Login started");
-        connectionMenager.Login(login, encryptedPassword, password);
-        DelayLogin();
+        connectionMenager.Login(login, encryptedPassword, password, this);
+        delayLogin();
     }
 
-    private void DelayLogin() {
+    public void showNetworkError(){
+        tf_info.setText("Wystąpił problem z połączeniem!");
+        tf_info.setTextColor(Color.RED);
+        tf_info.animate().alpha(1f).setDuration(500);
+        bar.dismiss();
+    }
+
+
+    public void showError(){
+        tf_info.setText("Błędny Login lub Hasło!");
+        tf_info.setTextColor(Color.RED);
+        tf_info.animate().alpha(1f).setDuration(500);
+        bar.dismiss();
+    }
+
+    public void delayLogin() {
         int delay = 200;
         new Handler().postDelayed(() -> {
-            if (connectionMenager.fileSaver.isLoginComplete()) {
+
                 Log.d("LOGIN", "Login completed!");
                 Intent mySuperIntent = new Intent(LoginActivity.this, MainActivity.class);
                 startActivity(mySuperIntent);
                 finish();
-            } else if (connectionMenager.isLoginCorrectError()) {
-                tf_info.setText("Błędny Login lub Hasło!");
-                tf_info.setTextColor(Color.RED);
-                tf_info.animate().alpha(1f).setDuration(500);
-                bar.dismiss();
-            } else if (connectionMenager.isError()) {
-                tf_info.setText("Wystąpił problem z połączeniem!");
-                tf_info.setTextColor(Color.RED);
-                tf_info.animate().alpha(1f).setDuration(500);
-                bar.dismiss();
-            } else {
-                DelayLogin();
-            }
 
         }, delay);
     }

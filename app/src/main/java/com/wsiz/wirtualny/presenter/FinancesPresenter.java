@@ -1,10 +1,20 @@
 package com.wsiz.wirtualny.presenter;
 
-import java.util.List;
+import com.wsiz.wirtualny.model.network.manager.NetworkManager;
+import com.wsiz.wirtualny.model.network.usecase.GetUserInfoFromServerUseCase;
 
-public class FinancesPresenter {
+import java.util.ArrayList;
 
-    interface Presenter {
-        List<Float> getFinancesList();
+public class FinancesPresenter extends Presenter implements FinancesContract.Presenter{
+
+    @Override
+    public ArrayList<String> getFinances() {
+         ArrayList<String> arrayList = new ArrayList<>();
+
+        GetUserInfoFromServerUseCase getLocationFromServerUseCase = new GetUserInfoFromServerUseCase( NetworkManager.getInstance().getApiService());
+        getLocationFromServerUseCase.execute();
+         return arrayList;
     }
+
 }
+

@@ -4,7 +4,6 @@ import androidx.annotation.NonNull;
 
 import com.wsiz.wirtualny.model.Pocket.EasyPreferences;
 import com.wsiz.wirtualny.model.network.manager.Result;
-import com.wsiz.wirtualny.model.network.response.GetterResponse;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -20,9 +19,9 @@ public abstract class BaseSettingsUseCase {
     protected static final String PARAM_STORE_ID = "store_id";
 
 
-    protected abstract Observable<Result<GetterResponse>> execute(@NonNull Map<String, Object> params);
+    protected abstract Observable<Result<String>> execute(@NonNull Map<String, Object> params);
 
-    public Observable< Result<GetterResponse>> execute() {
+    public Observable<Result<String>> execute() {
         Map<String, Object> options = new HashMap<>();
         options.put(PARAM_OFFSET, 0);
         options.put(PARAM_API_KEY, EasyPreferences.getToken());
@@ -30,13 +29,7 @@ public abstract class BaseSettingsUseCase {
 
         return execute(options)
                 .flatMap(getterResponse -> {
-                    GetterResponse syncResponse = ((Result.Success<GetterResponse>) getterResponse).getData();
-                    if (syncResponse.getStatus() == 200) {
-                        return execute(options);
-                    } else {
-
-                        return execute(options);
-                    }
+                         return execute(options);
                 })
                 .subscribeOn(Schedulers.io())
                 .doOnError(new Action1<Throwable>() {
