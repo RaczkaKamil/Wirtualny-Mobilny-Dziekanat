@@ -9,7 +9,7 @@ import com.wsiz.wirtualny.model.WSIZ_APP;
 
 public class EasyPreferences {
 
-    public static void setLogin(String login){
+    public static void setLogin(String login) {
         SharedPreferences preferences = PreferenceManager
                 .getDefaultSharedPreferences(WSIZ_APP.getInstance());
         SharedPreferences.Editor editor = preferences.edit();
@@ -17,13 +17,13 @@ public class EasyPreferences {
         editor.apply();
     }
 
-    public static String getLogin(){
+    public static String getLogin() {
         SharedPreferences preferences = PreferenceManager
                 .getDefaultSharedPreferences(WSIZ_APP.getInstance());
         return preferences.getString("login", "");
     }
 
-    public static void setPassword(String password){
+    public static void setPassword(String password) {
         SharedPreferences preferences = PreferenceManager
                 .getDefaultSharedPreferences(WSIZ_APP.getInstance());
         SharedPreferences.Editor editor = preferences.edit();
@@ -31,29 +31,14 @@ public class EasyPreferences {
         editor.apply();
     }
 
-    public static String getPassword(){
+    public static String getPassword() {
         SharedPreferences preferences = PreferenceManager
                 .getDefaultSharedPreferences(WSIZ_APP.getInstance());
         return preferences.getString("password", "");
     }
 
-    public static void setEncryptedPassword(String password){
-        SharedPreferences preferences = PreferenceManager
-                .getDefaultSharedPreferences(WSIZ_APP.getInstance());
-        SharedPreferences.Editor editor = preferences.edit();
-        editor.putString("EncryptedPassword", password);
-        editor.apply();
-    }
 
-    public static String getEncryptedPassword(){
-        SharedPreferences preferences = PreferenceManager
-                .getDefaultSharedPreferences(WSIZ_APP.getInstance());
-        return preferences.getString("EncryptedPassword", "");
-    }
-
-
-
-    public static void setCookies(String cookies){
+    public static void setCookies(String cookies) {
         SharedPreferences preferences = PreferenceManager
                 .getDefaultSharedPreferences(WSIZ_APP.getInstance());
         SharedPreferences.Editor editor = preferences.edit();
@@ -61,13 +46,13 @@ public class EasyPreferences {
         editor.apply();
     }
 
-    public static String getCookies(){
+    public static String getCookies() {
         SharedPreferences preferences = PreferenceManager
                 .getDefaultSharedPreferences(WSIZ_APP.getInstance());
         return preferences.getString("cookies", "");
     }
 
-    public static void setToken(String cookies){
+    public static void setToken(String cookies) {
         SharedPreferences preferences = PreferenceManager
                 .getDefaultSharedPreferences(WSIZ_APP.getInstance());
         SharedPreferences.Editor editor = preferences.edit();
@@ -75,13 +60,14 @@ public class EasyPreferences {
         editor.apply();
     }
 
-    public static String getToken(){
+    public static String getToken() {
         SharedPreferences preferences = PreferenceManager
                 .getDefaultSharedPreferences(WSIZ_APP.getInstance());
-      String token = preferences.getString("token", "");
+        String token = preferences.getString("token", "");
         return token;
     }
-    public static void setFinancesID(String id){
+
+    public static void setFinancesID(String id) {
         SharedPreferences preferences = PreferenceManager
                 .getDefaultSharedPreferences(WSIZ_APP.getInstance());
         SharedPreferences.Editor editor = preferences.edit();
@@ -89,14 +75,14 @@ public class EasyPreferences {
         editor.apply();
     }
 
-    public static String getFinancesID(){
+    public static String getFinancesID() {
         SharedPreferences preferences = PreferenceManager
                 .getDefaultSharedPreferences(WSIZ_APP.getInstance());
-        String token = preferences.getString("financesID", "");
+        String token = preferences.getString("financesID", "0");
         return token;
     }
 
-    public static void setStudentID(String id){
+    public static void setStudentID(String id) {
         SharedPreferences preferences = PreferenceManager
                 .getDefaultSharedPreferences(WSIZ_APP.getInstance());
         SharedPreferences.Editor editor = preferences.edit();
@@ -104,11 +90,10 @@ public class EasyPreferences {
         editor.apply();
     }
 
-    public static String getStudentID(){
+    public static String getStudentID() {
         SharedPreferences preferences = PreferenceManager
                 .getDefaultSharedPreferences(WSIZ_APP.getInstance());
-        String token = preferences.getString("studentID", "");
+        String token = preferences.getString("studentID", "0");
         return token;
     }
-
 }

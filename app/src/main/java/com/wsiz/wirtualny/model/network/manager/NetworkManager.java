@@ -12,12 +12,10 @@ import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonToken;
 import com.google.gson.stream.JsonWriter;
 import com.wsiz.wirtualny.BuildConfig;
-import com.wsiz.wirtualny.model.WSIZ_APP;
-import com.wsiz.wirtualny.model.db.RealmString;
+import com.wsiz.wirtualny.model.db.RealmManager.RealmString;
 import com.wsiz.wirtualny.model.network.Api;
 
 import java.io.IOException;
-import java.net.CookieHandler;
 import java.net.CookieManager;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -41,11 +39,6 @@ import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.converter.scalars.ScalarsConverterFactory;
 
-
-/**
- * Created by Ruslan Kishai on 10/26/2017.
- * Copyright (C) 2017 EasyCount.
- */
 
 public class NetworkManager {
      private static NetworkManager instance;
@@ -84,8 +77,7 @@ public class NetworkManager {
     }
 
     private <S> S createRetrofitService(Class<S> serviceClass, Retrofit.Builder builder) {
-        System.out.println("CREATE RETROFITE");
-        ConnectionPool connectionPool = new ConnectionPool(10, 10000, TimeUnit.MINUTES);
+         ConnectionPool connectionPool = new ConnectionPool(10, 10000, TimeUnit.MINUTES);
 
         Retrofit retrofit = builder
                 .client(httpClient

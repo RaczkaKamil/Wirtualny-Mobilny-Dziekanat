@@ -18,6 +18,9 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 
+import com.wsiz.wirtualny.model.db.DatabaseDao;
+import com.wsiz.wirtualny.model.db.RealmClasses.User;
+import com.wsiz.wirtualny.model.db.RealmManager.RealmManager;
 import com.wsiz.wirtualny.view.Activity.Report.BugReportActivity;
 import com.wsiz.wirtualny.view.Activity.Login.LoginActivity;
 import com.wsiz.wirtualny.view.Activity.Main.MainActivity;
@@ -54,14 +57,12 @@ public class MoreFragment extends Fragment {
                 startActivity(mySuperIntent);
         });
 
-        FileReader fileReader = new FileReader();
-        fileReader.startReadUserID(getContext());
-        String userData = fileReader.getUserData();
-        String[] split = userData.split("/");
+        DatabaseDao databaseDao = RealmManager.createDatabaseDao();
+      User user =  databaseDao.getUser();
 
-        u_name.setText(split[2]+" "+split[3]);
-        u_index.setText(split[1]);
-        if(split[5].contains("true")){
+        u_name.setText(user.getImie() + " " + user.getNazwisko());
+        u_index.setText(user.getAlbum());
+        if(user.isActive()){
             u_konto.setText("AKTYWNE");
             u_konto.setTextColor(Color.parseColor("#32a852"));
         }else {
@@ -69,7 +70,7 @@ public class MoreFragment extends Fragment {
             u_konto.setTextColor(Color.RED);
         }
 
-        if(split[6].contains("false")){
+        if(!user.isStar()){
             u_star.setText("Uregulowane");
             u_star.setTextColor(Color.parseColor("#32a852"));
         }else{
@@ -81,12 +82,15 @@ public class MoreFragment extends Fragment {
         ImageView fb_icon = root.findViewById(R.id.fb_icon);
         ImageView discord_icon = root.findViewById(R.id.discord_icon);
         ImageView wsiz_icon = root.findViewById(R.id.wsiz_icon);
+        ImageView vpn = root.findViewById(R.id.vpn);
 
         fb_icon.setOnClickListener(view -> startActivity(new Intent("android.intent.action.VIEW", Uri.parse("https://www.facebook.com/WSIZBB/"))));
 
         discord_icon.setOnClickListener(view -> startActivity(new Intent("android.intent.action.VIEW", Uri.parse("https://discordapp.com/channels/555843675293483008/633317533109321738"))));
 
         wsiz_icon.setOnClickListener(view -> startActivity(new Intent("android.intent.action.VIEW", Uri.parse("https://www.wsi.edu.pl/"))));
+
+        vpn.setOnClickListener(view -> startActivity(new Intent("android.intent.action.VIEW", Uri.parse("https://openvpn.net/"))));
         try {
             PackageInfo pInfo = root.getContext().getPackageManager().getPackageInfo(root.getContext().getPackageName(), 0);
             String version = pInfo.versionName;

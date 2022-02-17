@@ -2,9 +2,11 @@ package com.wsiz.wirtualny.view.Activity.SelectedNews;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.opengl.Visibility;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
@@ -25,6 +27,10 @@ import com.github.barteksc.pdfviewer.PDFView;
 import com.wsiz.wirtualny.R;
 import com.wsiz.wirtualny.model.Pocket.EasyPreferences;
 import com.wsiz.wirtualny.model.Pocket.FileReader;
+import com.wsiz.wirtualny.model.WSIZ_APP;
+import com.wsiz.wirtualny.model.db.DatabaseDao;
+import com.wsiz.wirtualny.model.db.RealmClasses.News;
+import com.wsiz.wirtualny.model.db.RealmManager.RealmManager;
 import com.wsiz.wirtualny.view.Activity.Main.MainActivity;
 
 import java.io.File;
@@ -45,17 +51,40 @@ public class SelectedActivity extends AppCompatActivity {
     TextView tf_tytul;
     TextView tf_data;
     EditText tf_tresc;
-     String[] chosed = new String[6];
     String FILE_URL;
     String FILE_NAME;
     PDFView pdfView;
-
+    int chosed_id;
+    News news;
+Boolean showToolbarMenu = true;
 
     @SuppressLint("SetJavaScriptEnabled")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_selected);
+
+            try {
+            this.chosed_id = getIntent().getIntExtra("select",0);
+        } catch (NumberFormatException e) {
+            Toast.makeText(this, "Błąd otwierania pliku", Toast.LENGTH_SHORT).show();
+            Log.d(TAG, "Błąd otwierania pliku");
+        }
+
+        DatabaseDao databaseDao = RealmManager.createDatabaseDao();
+        news = databaseDao.getNewsFromBaseByID(chosed_id);
+        System.out.println(news.toString());
+        try {
+            if (!news.getFilename().contains("null")) {
+                showToolbarMenu = false;
+            }
+        }catch (NullPointerException e){
+            showToolbarMenu = false;
+
+        }
+
+
+
         Toolbar toolbar = findViewById(R.id.toolbar);
         pdfView = findViewById(R.id.pdfView);
 
@@ -79,23 +108,15 @@ public class SelectedActivity extends AppCompatActivity {
 
 
 
-        try {
-            this.chosed = getIntent().getStringArrayExtra("select");
-        } catch (NumberFormatException e) {
-            Toast.makeText(this, "Błąd otwierania pliku", Toast.LENGTH_SHORT).show();
-            Log.d(TAG, "Błąd otwierania pliku");
-        }
-
-        assert chosed != null;
-        tf_tytul.setText(chosed[0]);
+        tf_tytul.setText(news.getTytul());
         Date date;
         date = new Date();
-        date.setTime(Long.valueOf(chosed[1]));
+        date.setTime(Long.valueOf(news.getDataut()));
         @SuppressLint("SimpleDateFormat") SimpleDateFormat format1 = new SimpleDateFormat("dd.MM.yyyy");
         String dateFormated = format1.format(date);
 
         tf_data.setText(dateFormated);
-        tf_tresc.setText(chosed[2]);
+        tf_tresc.setText(news.getTresc());
         tf_tresc.setKeyListener(null);
 
 
@@ -104,11 +125,11 @@ public class SelectedActivity extends AppCompatActivity {
 
         pdfView.setVisibility(View.GONE);
         try {
-            if (!chosed[4].contains("null")) {
+            if (!news.getFilename().contains("null")) {
+                showToolbarMenu = true;
                 System.out.println("EXIST");
                  pdfView.setVisibility(View.VISIBLE);
-               //  startDownload(chosed[4], chosed[5]);
-                startDownloadToWebView(chosed[4], chosed[5]);
+                 startDownloadToWebView();
             }
 
         } catch (NullPointerException e) {
@@ -134,26 +155,29 @@ public class SelectedActivity extends AppCompatActivity {
             return true;
         }
         if (item.getItemId() == R.id.action_save) {
-         startDownload(chosed[4], chosed[5]);
-        //    startDownloadToWebView(chosed[4], chosed[5]);
-            return true;
+            if (showToolbarMenu)
+
+         startDownload();
+             return true;
         }
         return false;
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+
         getMenuInflater().inflate(R.menu.main, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
-    private void startDownloadToWebView(String fileName, String fileUUID) {
+    private void startDownloadToWebView() {
         FileReader fileReader = new FileReader();
         fileReader.startReadToken(this);
-        this.FILE_URL = "https://dziekanat.wsi.edu.pl/news/file/" + fileUUID+"/"+fileName ;
-        this.FILE_NAME = fileName;
+        this.FILE_URL = "https://dziekanat.wsi.edu.pl/news/file/" + news.getFileuuid()+"/"+news.getFilename();
+        this.FILE_NAME = news.getFilename();
 
-
+        System.out.println("DOWNLOAD:");
+        System.out.println(FILE_URL);
         if (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 == PackageManager.PERMISSION_DENIED) {
             String[] permision = {Manifest.permission.WRITE_EXTERNAL_STORAGE};
@@ -164,11 +188,12 @@ public class SelectedActivity extends AppCompatActivity {
     }
 
 
-    private void startDownload(String fileName, String fileUUID) {
-        FileReader fileReader = new FileReader();
+    private void startDownload() {
+                FileReader fileReader = new FileReader();
         fileReader.startReadToken(this);
-        this.FILE_URL = "https://dziekanat.wsi.edu.pl/news/file/" + fileUUID+"/"+fileName ;
-        this.FILE_NAME = fileName;
+        this.FILE_URL = "https://dziekanat.wsi.edu.pl/news/file/" + news.getFileuuid()+"/"+news.getFilename();
+        this.FILE_NAME = news.getFilename();
+
 
 
         if (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
@@ -178,24 +203,23 @@ public class SelectedActivity extends AppCompatActivity {
         } else {
             startDownloading();
         }
+
     }
 
     private void startDownloading() {
-
         new Thread(this::DownloadFiles).start();
     }
 
     private void startDownloadingToWebView() {
-
-         new Thread(this::DownloadFiles2).start();
+            new Thread(this::DownloadFiles2).start();
     }
 
     public void DownloadFiles2() {
         try {
 
 
+            File futureStudioIconFile = new File(WSIZ_APP.getInstance().getFilesDir(),   FILE_NAME);
 
-                File futureStudioIconFile = new File(Environment.getExternalStorageDirectory() + "/" + FILE_NAME);
 
              InputStream inputStream = null;
             OutputStream outputStream = null;
@@ -203,11 +227,10 @@ public class SelectedActivity extends AppCompatActivity {
             URL u = new URL(FILE_URL);
             HttpsURLConnection connection = (HttpsURLConnection) u.openConnection();
             connection.setRequestMethod("GET");
-
             connection.setRequestProperty("Cookie", EasyPreferences.getCookies());
+
+            System.out.println(EasyPreferences.getCookies());
             inputStream = connection.getInputStream();
-
-
             byte[] fileReader = new byte[4096];
 
 
@@ -230,7 +253,10 @@ public class SelectedActivity extends AppCompatActivity {
             outputStream.flush();
 
 
-            File file = new File(Environment.getExternalStorageDirectory() + "/" + FILE_NAME);
+            //File file = new File(Environment.getExternalStorageDirectory() + "/" + FILE_NAME);
+            File file = new File(WSIZ_APP.getInstance().getFilesDir(),   FILE_NAME);
+
+
             pdfView.post(new Runnable() {
                 @Override
                 public void run() {
@@ -248,7 +274,7 @@ public class SelectedActivity extends AppCompatActivity {
     }
     public void DownloadFiles()   {
         try {
-            File futureStudioIconFile = new File(Environment.getExternalStorageDirectory() + "/" + FILE_NAME);
+            File futureStudioIconFile = new File(WSIZ_APP.getInstance().getFilesDir(),   FILE_NAME);
 
             InputStream inputStream = null;
             OutputStream outputStream = null;
@@ -281,7 +307,7 @@ public class SelectedActivity extends AppCompatActivity {
             outputStream.flush();
 
 
-            File file = new File(Environment.getExternalStorageDirectory() + "/" + FILE_NAME);
+            File file = new File(WSIZ_APP.getInstance().getFilesDir(),   FILE_NAME);
             pdfView.post(new Runnable() {
                 @Override
                 public void run() {

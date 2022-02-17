@@ -1,4 +1,4 @@
-package com.wsiz.wirtualny.model.db;
+package com.wsiz.wirtualny.model.db.RealmManager;
 
 import io.realm.DynamicRealm;
 import io.realm.DynamicRealmObject;

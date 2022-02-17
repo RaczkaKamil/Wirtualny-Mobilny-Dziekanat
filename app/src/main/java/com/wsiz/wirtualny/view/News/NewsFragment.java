@@ -19,7 +19,9 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.wsiz.wirtualny.model.JsonAdapter.JsonNews;
-import com.wsiz.wirtualny.model.ListAdapter.NewsListAdapter;
+import com.wsiz.wirtualny.model.db.RealmClasses.News;
+import com.wsiz.wirtualny.presenter.News.NewsContract;
+import com.wsiz.wirtualny.presenter.News.NewsPresenter;
 import com.wsiz.wirtualny.view.Activity.Main.MainActivity;
 import com.wsiz.wirtualny.R;
 import com.wsiz.wirtualny.view.Activity.Login.LoginActivity;
@@ -32,7 +34,10 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Objects;
 
+import io.realm.RealmResults;
+
 public class NewsFragment extends Fragment {
+    private NewsContract.Presenter presenter;
     private ArrayList<String> MessageslistOfString = new ArrayList<>();
     private ArrayList<String> MessageslistOfString2 = new ArrayList<>();
     private ArrayList<String> MessageslistOfString3 = new ArrayList<>();
@@ -43,20 +48,27 @@ public class NewsFragment extends Fragment {
     private Boolean isNewest = false;
 
     private SwipeRefreshLayout swipeRefreshLayout;
+    private ListView list_news;
+    private EditText et_search;
+    private RealmResults<News> newsRealmResults;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_news, container, false);
-
-        customAdapterr = new NewsListAdapter(MessageslistOfString3, getContext());
-        swipeRefreshLayout = root.findViewById(R.id.swipe);
         MainActivity activity = (MainActivity) getActivity();
-        assert activity != null;
-        activity.setToolbarVisible(false);
+        Objects.requireNonNull(activity).setToolbarVisible(false);
+        presenter = new NewsPresenter();
+        presenter.downlaodData();
+        initView(root);
+
+        return root;
+    }
 
 
-        final ListView list_news = root.findViewById(R.id.list_news);
-        EditText et_search = root.findViewById(R.id.et_search);
+    private void initView(View root){
+        swipeRefreshLayout = root.findViewById(R.id.swipe);
+        list_news = root.findViewById(R.id.list_news);
+        et_search = root.findViewById(R.id.et_search);
         et_search.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -71,141 +83,45 @@ public class NewsFragment extends Fragment {
                 searchWord(s.toString());
             }
         });
+        swipeRefreshLayout.setOnRefreshListener(() -> {
+            Log.d(TAG, "Refreshing...");
+            isRefreshingProces = true;
+            refreshList();
+        });
+        initList();
+    }
 
-
+    private void initList(){
+        newsRealmResults = presenter.getNews();
+        customAdapterr = new NewsListAdapter(newsRealmResults, getContext());
         list_news.setAdapter(customAdapterr);
         list_news.setOnItemClickListener((adapterView, view, i, l) -> {
             int ll = (int) l;
             connectToChosedMessage(ll);
         });
-
-
-        swipeRefreshLayout.setOnRefreshListener(() -> {
-            Log.d(TAG, "Refreshing...");
-            isRefreshingProces = true;
-            refreshNews();
-        });
-
-
-        getNews();
-
-        return root;
     }
 
-    private void refreshNews() {
-        MainActivity activity = (MainActivity) getActivity();
-        assert activity != null;
-        activity.downloadComponents();
-        getNews();
 
+
+    private void refreshList(){
+        newsRealmResults = presenter.getNews();
+        customAdapterr.notifyDataSetChanged();
+        swipeRefreshLayout.setRefreshing(false);
     }
+
 
     private void connectToChosedMessage(int number) {
         Intent intent = new Intent(getActivity(), SelectedActivity.class);
-        String[] btmS;
-        btmS = MessageslistOfString3.get(number).split("~~");
-        intent.putExtra("select", btmS);
+        System.out.println("CHOSING: " + newsRealmResults.get(number).getId());
+        intent.putExtra("select", (int) newsRealmResults.get(number).getId());
         startActivity(intent);
     }
 
     private void searchWord(String word) {
-        MessageslistOfString2.clear();
-        MessageslistOfString3.clear();
-        for (int i = 0; i < MessageslistOfString.size(); i++) {
-            if (MessageslistOfString.get(i).toLowerCase().contains(word)) {
-                MessageslistOfString2.add(MessageslistOfString.get(i));
-            }
-        }
-        MessageslistOfString3.addAll(MessageslistOfString2);
-        customAdapterr.notifyDataSetChanged();
+        System.out.println("SEARCH " +word);
+         newsRealmResults = presenter.getNewsByName(word);
+        customAdapterr = new NewsListAdapter(newsRealmResults, getContext());
+        list_news.setAdapter(customAdapterr);
     }
 
-    private void getNews() {
-        Thread thread = new Thread(() -> {
-            try {
-                MainActivity activity = (MainActivity) getActivity();
-                boolean isNewsLoaded = false;
-                assert activity != null;
-                while (!activity.isSaved()) {
-                    if (!isNewsLoaded) {
-                        getAvailableNews("readed oldest news");
-                        isNewsLoaded = true;
-                    }
-                }
-                isNewest=true;
-                getAvailableNews("readed newest news");
-
-
-            } catch (IOException | NullPointerException | JsonSyntaxException e) {
-                e.printStackTrace();
-            }
-        });
-        thread.start();
-    }
-
-    private void getAvailableNews(String message) throws IOException {
-        try {
-            String data;
-            FileInputStream fileInputStream;
-            fileInputStream = Objects.requireNonNull(getContext()).openFileInput(getContext().fileList()[getNewsFileNumber()]);
-            InputStreamReader inputStreamReader = new InputStreamReader(fileInputStream);
-            BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-            StringBuilder stringBuffer = new StringBuilder();
-
-
-            while ((data = bufferedReader.readLine()) != null) {
-                stringBuffer.append(data).append("\n");
-                String splited = stringBuffer.toString();
-                Log.d(TAG, message);
-                Gson gson = new Gson();
-                JsonNews[] jsonNews = gson.fromJson(splited, JsonNews[].class);
-                setJson(jsonNews);
-            }
-
-        } catch (ArrayIndexOutOfBoundsException e) {
-            Objects.requireNonNull(getActivity()).runOnUiThread(() -> {
-                Toast.makeText(getContext(), "Blad logowania!", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(getContext(), LoginActivity.class);
-                startActivity(intent);
-            });
-            e.fillInStackTrace();
-        }
-
-    }
-
-
-    private int getNewsFileNumber() {
-        for (int i = 0; i < Objects.requireNonNull(getContext()).fileList().length; i++) {
-            if (getContext().fileList()[i].contains("News")) {
-                return i;
-            }
-        }
-        return -1;
-    }
-
-    private void setJson(JsonNews[] jsonNews) {
-        Objects.requireNonNull(getActivity()).runOnUiThread(() -> {
-            MessageslistOfString3.clear();
-            customAdapterr.notifyDataSetChanged();
-            for (JsonNews jsonNew : jsonNews) {
-                MessageslistOfString.add(
-                        jsonNew.getTytyl() + "~~"
-                                + jsonNew.getDataut() + "~~"
-                                + jsonNew.getTresc() + "~~"
-                                + jsonNew.getOgloszenieid() + "~~"
-                                + jsonNew.getFilename() + "~~"
-                                + jsonNew.getFileuuid());
-            }
-            MessageslistOfString3.addAll(MessageslistOfString);
-            customAdapterr.notifyDataSetChanged();
-            if (isRefreshingProces&&isNewest) {
-
-                isRefreshingProces =false;
-                isNewest=false;
-
-                Toast.makeText(getContext(), "Odświeżono!", Toast.LENGTH_SHORT).show();
-                swipeRefreshLayout.setRefreshing(false);
-            }
-        });
-    }
 }

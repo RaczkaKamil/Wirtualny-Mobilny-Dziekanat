@@ -38,6 +38,7 @@
             app:layout_constraintTop_toBottomOf="@+id/student_layout" />
 
         <include
+            android:visibility="gone"
             android:id="@+id/student_bug"
             layout="@layout/content_report"
             android:layout_width="match_parent"

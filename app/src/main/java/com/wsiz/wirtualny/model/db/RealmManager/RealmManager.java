@@ -1,13 +1,12 @@
-package com.wsiz.wirtualny.model.db;
+package com.wsiz.wirtualny.model.db.RealmManager;
 
 import androidx.annotation.NonNull;
 
+import com.wsiz.wirtualny.model.db.DatabaseDao;
+
 import io.realm.Realm;
 
-/**
- * Created by Ruslan Kishai on 10/24/2017.
- * Copyright (C) 2017 EasyCount.
- */
+
 
 public class RealmManager {
 
@@ -25,6 +24,7 @@ public class RealmManager {
 
 
     public static DatabaseDao createDatabaseDao() {
+        open();
         checkForOpenRealm();
         return new DatabaseDao(realm);
     }

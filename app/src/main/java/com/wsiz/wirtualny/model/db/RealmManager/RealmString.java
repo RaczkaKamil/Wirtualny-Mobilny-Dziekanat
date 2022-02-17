@@ -1,11 +1,8 @@
-package com.wsiz.wirtualny.model.db;
+package com.wsiz.wirtualny.model.db.RealmManager;
 
 import io.realm.RealmObject;
 
-/**
- * Created by Ruslan Kishai on 10/26/2017.
- * Copyright (C) 2017 EasyCount.
- */
+
 public class RealmString extends RealmObject {
     private String value;
 

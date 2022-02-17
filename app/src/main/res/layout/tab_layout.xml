@@ -18,8 +18,9 @@ android:background="@color/colorPrimary">
         app:layout_constraintTop_toTopOf="parent"
         app:tabIndicatorAnimationDuration="600"
         app:tabIndicatorColor="@color/colorPrimaryDark"
-        app:tabMode="auto"
-
+        app:tabMode="scrollable"
+app:tabGravity="start"
+        android:foregroundGravity="right"
          app:tabTextColor="@color/colorWhite">
 
         <com.google.android.material.tabs.TabItem

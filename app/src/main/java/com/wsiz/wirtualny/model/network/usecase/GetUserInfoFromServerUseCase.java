@@ -5,7 +5,7 @@ import androidx.annotation.NonNull;
 import com.google.gson.Gson;
 import com.wsiz.wirtualny.model.Pocket.EasyPreferences;
 import com.wsiz.wirtualny.model.db.RealmClasses.User;
-import com.wsiz.wirtualny.model.db.RealmManager;
+import com.wsiz.wirtualny.model.db.RealmManager.RealmManager;
 import com.wsiz.wirtualny.model.network.Api;
 import com.wsiz.wirtualny.model.network.manager.Result;
 
@@ -30,11 +30,12 @@ public class GetUserInfoFromServerUseCase extends BaseSettingsUseCase {
          return api.getUser(EasyPreferences.getToken())
                 .doOnNext(getterResponse -> {
                      Realm realm = RealmManager.open();
-                     realm.executeTransactionAsync(realm1 -> {
-                            User user = gson.fromJson(getterResponse, User.class);
-                            user.setId(1);
-                            realm.copyToRealmOrUpdate(user);
-                            EasyPreferences.setFinancesID(String.valueOf(user.getFinid()));
+                     realm.executeTransactionAsync(dataBase -> {
+                            User data = gson.fromJson(getterResponse, User.class);
+                            data.setId(1);
+                            dataBase.insertOrUpdate(data);
+                            EasyPreferences.setFinancesID(String.valueOf(data.getFinid()));
+                            EasyPreferences.setStudentID(String.valueOf(data.getStudentid()));
                         });
                 })
             .map(Result::success);

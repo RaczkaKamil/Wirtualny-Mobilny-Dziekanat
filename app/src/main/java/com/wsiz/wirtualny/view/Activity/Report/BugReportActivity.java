@@ -18,7 +18,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import com.wsiz.wirtualny.R;
-import com.wsiz.wirtualny.model.ListAdapter.BugListAdapter;
+import com.wsiz.wirtualny.view.ListAdapter.BugListAdapter;
 import com.wsiz.wirtualny.view.Activity.Main.MainActivity;
 
 import java.io.BufferedReader;

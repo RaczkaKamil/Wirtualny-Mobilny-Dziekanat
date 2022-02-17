@@ -59,8 +59,8 @@ public class NotificationService  extends Service {
         mBuilder.setContentIntent(pendingIntent);
         mBuilder.setSmallIcon(R.drawable.logowsiz);
         mBuilder.setColor(Color.BLUE);
-        mBuilder.setContentTitle("Your Title");
-        mBuilder.setContentText("Your text");
+        mBuilder.setContentTitle(bigTextString);
+        mBuilder.setContentText(setBigContentTitle);
         mBuilder.setPriority(Notification.PRIORITY_HIGH);
         mBuilder.setStyle(bigText);
 

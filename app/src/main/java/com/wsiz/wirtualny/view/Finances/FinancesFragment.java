@@ -13,9 +13,9 @@ import androidx.fragment.app.Fragment;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.wsiz.wirtualny.model.JsonAdapter.JsonFinances;
-import com.wsiz.wirtualny.model.ListAdapter.FinancesListAdapter;
-import com.wsiz.wirtualny.presenter.FinancesContract;
-import com.wsiz.wirtualny.presenter.FinancesPresenter;
+import com.wsiz.wirtualny.model.db.RealmClasses.Finances;
+import com.wsiz.wirtualny.presenter.Finances.FinancesContract;
+import com.wsiz.wirtualny.presenter.Finances.FinancesPresenter;
 import com.wsiz.wirtualny.view.Activity.Main.MainActivity;
 import com.wsiz.wirtualny.R;
 
@@ -26,100 +26,25 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Objects;
 
+import io.realm.RealmResults;
+
 public class FinancesFragment extends Fragment {
     private FinancesContract.Presenter presenter;
-    private FinancesListAdapter customAdapterr;
-    private MainActivity activity;
-
-    private ArrayList<String> listOfFinances = new ArrayList<>();
-    private Boolean isFinansesLoaded = false;
+    private FinancesListAdapter customAdapter;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_finances, container, false);
         presenter = new FinancesPresenter();
-
-        activity = (MainActivity) getActivity();
-        activity.setToolbarVisible(false);
-
-        final ListView online_list = root.findViewById(R.id.finanse_list);
-        online_list.setAdapter(customAdapterr);
-        online_list.setClickable(false);
-        customAdapterr = new FinancesListAdapter(listOfFinances, getContext());
-        customAdapterr.notifyDataSetChanged();
-
-        presenter.getFinances();
-        getFinances();
+        presenter.downlaodData();
+        initView(root);
         return root;
     }
 
-    private void getFinances() {
-        Thread thread = new Thread(() -> {
-            try {
-                MainActivity activity = (MainActivity) getActivity();
-                assert activity != null;
-                while (!activity.isSaved()) {
-                    if (!isFinansesLoaded) {
-                        getAvailableFinances("readed oldest finances");
-                        isFinansesLoaded = true;
-                    }
-                }
-                getAvailableFinances("readed newest finances");
-            } catch (IOException | NullPointerException e) {
-                e.printStackTrace();
-            }
-        });
-
-        thread.start();
-    }
-
-    private void getAvailableFinances(String message) throws IOException {
-        String data;
-        FileInputStream fileInputStream;
-        fileInputStream = Objects.requireNonNull(getContext()).openFileInput(getContext().fileList()[getFinancesFileNumber()]);
-        InputStreamReader inputStreamReader = new InputStreamReader(fileInputStream);
-        BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-        StringBuilder stringBuffer = new StringBuilder();
-
-
-        while ((data = bufferedReader.readLine()) != null) {
-            stringBuffer.append(data).append("\n");
-            String splited = stringBuffer.toString();
-            String TAG = "Finances fragment";
-            Log.d(TAG,message);
-            Gson gson = new Gson();
-            try{
-                JsonFinances[] jsonFinances = gson.fromJson(splited, JsonFinances[].class);
-                setJson(jsonFinances);
-            }catch (JsonSyntaxException e){
-                e.fillInStackTrace();
-            }
-
-
-
-        }
-    }
-
-    private int getFinancesFileNumber() {
-        for (int i = 0; i < Objects.requireNonNull(getContext()).fileList().length; i++) {
-            if (getContext().fileList()[i].contains("Finances")) {
-                return i;
-            }
-        }
-        return -1;
-    }
-
-    private void setJson(JsonFinances[] jsonFinances) {
-        Objects.requireNonNull(getActivity()).runOnUiThread(() -> {
-            for (JsonFinances jsonFinance : jsonFinances) {
-                listOfFinances.add(
-                        jsonFinance.getDate() + "~~" +
-                                jsonFinance.getType() + "~~" +
-                                jsonFinance.getDetails() + "~~" +
-                                jsonFinance.getAmount() + " zł" + "~~");
-                customAdapterr.notifyDataSetChanged();
-            }
-
-        });
+    private void initView(View root) {
+        ListView online_list = root.findViewById(R.id.finanse_list);
+        customAdapter = new FinancesListAdapter(presenter.getFinances(), getContext());
+        online_list.setAdapter(customAdapter);
+        online_list.setClickable(false);
     }
 }

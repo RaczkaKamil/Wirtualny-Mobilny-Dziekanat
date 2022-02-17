@@ -11,10 +11,12 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.snackbar.Snackbar;
+import com.wsiz.wirtualny.model.Pocket.EasyPreferences;
 import com.wsiz.wirtualny.view.Activity.Main.MainActivity;
 import com.wsiz.wirtualny.model.Pocket.ConnectionMenager;
 import com.wsiz.wirtualny.R;
@@ -48,8 +50,7 @@ public class LoginActivity extends AppCompatActivity {
         bar = Snackbar.make(findViewById(android.R.id.content), "Łączenie...", Snackbar.LENGTH_INDEFINITE);
         Snackbar.SnackbarLayout snack_view = (Snackbar.SnackbarLayout) bar.getView();
         snack_view.addView(new ProgressBar(this));
-        connectionMenager = new ConnectionMenager(this, bar);
-
+        connectionMenager = new ConnectionMenager();
         tf_login = findViewById(R.id.tf_login);
         tf_password = findViewById(R.id.tf_password);
         tf_info = findViewById(R.id.tf_info);
@@ -104,39 +105,20 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void SearchAndSetAccount() {
-        String data;
-        for (int i = 0; i < fileList().length; i++) {
-            if (this.fileList()[i].contains("AccountLogin")) {
-                try {
-                    FileInputStream fileInputStream;
-                    fileInputStream = this.openFileInput(this.fileList()[i]);
-                    InputStreamReader inputStreamReader = new InputStreamReader(fileInputStream);
-                    BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-                    StringBuilder stringBuffer = new StringBuilder();
-                    while ((data = bufferedReader.readLine()) != null) {
-                        stringBuffer.append(data).append("\n");
-                        String splited = stringBuffer.toString();
-                        String[] account = splited.split("/");
-                        tf_login.setText(account[0]);
-                        tf_password.setText(account[1].trim());
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
 
-            }
-        }
+                        tf_login.setText(EasyPreferences.getLogin());
+                        tf_password.setText(EasyPreferences.getPassword());
     }
     private String autoLogin = "";
+
     private void login() {
-        connectionMenager.clearError();
         String login = tf_login.getText().toString().replaceAll("\\s","");
         String password = tf_password.getText().toString();
         String encryptedPassword = md5(password);
         bar.show();
         Log.d("LOGIN", "Login started");
         connectionMenager.Login(login, encryptedPassword, password, this);
-        delayLogin();
+
     }
 
     public void showNetworkError(){
@@ -167,9 +149,14 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void loginOffLine() {
-        Intent mySuperIntent = new Intent(LoginActivity.this, MainActivity.class);
-        startActivity(mySuperIntent);
-        finish();
+        if(!EasyPreferences.getStudentID().equals("0")){
+            Intent mySuperIntent = new Intent(LoginActivity.this, MainActivity.class);
+            startActivity(mySuperIntent);
+            finish();
+        }else{
+            Toast.makeText(this, "Brak danych o poprzednich logowaniach", Toast.LENGTH_SHORT).show();
+        }
+
     }
 
 
