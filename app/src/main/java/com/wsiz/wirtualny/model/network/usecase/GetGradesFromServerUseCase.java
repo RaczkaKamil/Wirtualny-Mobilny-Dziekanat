@@ -36,7 +36,6 @@ public class GetGradesFromServerUseCase extends BaseSettingsUseCase {
                         Grades[] data = gson.fromJson(getterResponse, Grades[].class);
                         if (RealmManager.createDatabaseDao().getGradesFromBase().size() != data.length)
                             new NotificationManager("Pojawiły się nowe oceny", "Oceny", "Wykryto zmiane w ocenach");
-
                         for (Grades grades : data) {
                             grades.setId(id++);
                             dataBase.insertOrUpdate(grades);

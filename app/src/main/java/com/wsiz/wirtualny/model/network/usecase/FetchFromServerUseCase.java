@@ -1,14 +1,10 @@
 package com.wsiz.wirtualny.model.network.usecase;
-
 import androidx.annotation.NonNull;
-
 import com.wsiz.wirtualny.model.network.Api;
 import com.wsiz.wirtualny.model.network.manager.Result;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
 import rx.Observable;
 
 
@@ -64,6 +60,4 @@ public class FetchFromServerUseCase {
                 new GetLecturesFromServerUseCase(api)
         );
     }
-
-
 }

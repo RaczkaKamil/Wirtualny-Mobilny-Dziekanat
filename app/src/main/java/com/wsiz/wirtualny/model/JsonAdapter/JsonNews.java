@@ -1,5 +1,7 @@
 package com.wsiz.wirtualny.model.JsonAdapter;
 
+import java.util.Objects;
+
 public class JsonNews {
     private long ogloszenieid;
     private String tytul;
@@ -40,4 +42,6 @@ public class JsonNews {
     public String getTytyl() {
         return tytul;
     }
+
+ 
 }

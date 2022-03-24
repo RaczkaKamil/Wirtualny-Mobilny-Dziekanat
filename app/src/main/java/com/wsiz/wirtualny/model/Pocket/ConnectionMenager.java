@@ -112,7 +112,6 @@ public class ConnectionMenager {
     }
 
     public void downloadData(){
-        System.out.println("DOWNLOAD DATA");
         FetchFromServerUseCase.downloadData(api).execute()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -129,6 +128,7 @@ e.printStackTrace();
 
                     @Override
                     public void onNext(Result<String> result) {
+                        loginActivity.delayLogin();
                     }
                 });
     }

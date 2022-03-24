@@ -24,6 +24,5 @@ public class FinancesPresenter extends Presenter implements FinancesContract.Pre
         GetFinancesFromServerUseCase getFinancesFromServerUseCase = new GetFinancesFromServerUseCase( NetworkManager.getInstance().getApiService());
         getFinancesFromServerUseCase.execute();
     }
-
 }
 

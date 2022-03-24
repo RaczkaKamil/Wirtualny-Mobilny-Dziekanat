@@ -2,6 +2,7 @@ package com.wsiz.wirtualny.view.Grade;
 
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -52,16 +53,25 @@ public class GradesListAdapter extends ArrayAdapter<GradesCalculated> {
             String grade = dataModel.getOcenatypid()==0?"":String.valueOf(dataModel.getOcenatypid());
 switch ((int) dataModel.getTerminid()){
     case 1:
+        if(grade.contains("2")){
+            viewHolder.t1.setTextColor(Color.RED);
+        }
         viewHolder.t1.setText(grade);
         viewHolder.t2.setText("");
         viewHolder.t3.setText("");
         break;
     case 2:
+        if(grade.contains("2")){
+            viewHolder.t2.setTextColor(Color.RED);
+        }
         viewHolder.t2.setText(grade);
         viewHolder.t1.setText("");
         viewHolder.t3.setText("");
         break;
     case 3:
+        if(grade.contains("2")){
+            viewHolder.t3.setTextColor(Color.RED);
+        }
         viewHolder.t3.setText(grade);
         viewHolder.t1.setText("");
         viewHolder.t2.setText("");

@@ -52,13 +52,10 @@ public class FinancesListAdapter extends ArrayAdapter<Finances> {
         viewHolder.price.setText(String.valueOf(finances.getAmount()));
     }
 
-
     private static class ViewHolder {
         TextView data;
         TextView title;
         TextView price;
 
     }
-
-
 }
